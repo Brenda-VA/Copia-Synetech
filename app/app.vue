@@ -1,8 +1,12 @@
+<script setup>
+</script>
+
 <template>
   <main class="min-h-screen bg-slate-950 text-white">
-    <BarraNavegacion />
-    <HeroCarrusel />
-    <SeccionCaracteristicasIA />
-    <SeccionSuiteEducativa />
+    <!--- Los autoimports se hacen esc la esribiendo con la primera letra en mayuscula el nombre de la carpeta -->
+    <LayoutBarraNavegacion />
+    <SeccionesHeroCarrusel />
+    <SeccionesSeccionCaracteristicasIA />
+    <SeccionesSeccionSuiteEducativa />
   </main>
 </template>
