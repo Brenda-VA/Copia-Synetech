@@ -23,7 +23,7 @@ function cerrarDropdown() {
 
 <template>
   <header
-    class="sticky top-0 z-50 bg-[#3a3a3d]"
+    class="sticky top-0 z-50 bg-[#2D2D2D]"
     @mouseleave="cerrarDropdown"
   >
     <nav
@@ -132,7 +132,7 @@ function cerrarDropdown() {
 
     <div
       v-show="menuActivo === 'pantallas'"
-      class="hidden bg-[#3a3a3d] lg:block"
+      class="hidden bg-[#2D2D2D] lg:block"
       @mouseenter="abrirDropdown('pantallas')"
     >
       <div class="mx-auto max-w-[1400px] px-4 py-14 md:px-6 lg:px-8">
@@ -233,7 +233,7 @@ function cerrarDropdown() {
 
     <div
       v-show="menuActivo === 'soporte'"
-      class="hidden bg-[#3a3a3d] lg:block"
+      class="hidden bg-[#2D2D2D] lg:block"
       @mouseenter="abrirDropdown('soporte')"
     >
       <div class="mx-auto max-w-[1400px] px-4 py-14 md:px-6 lg:px-8">
@@ -310,7 +310,7 @@ function cerrarDropdown() {
 
     <div
       v-show="menuActivo === 'idioma'"
-      class="hidden bg-[#3a3a3d] lg:block"
+      class="hidden bg-[#2D2D2D] lg:block"
       @mouseenter="abrirDropdown('idioma')"
     >
       <div class="mx-auto max-w-[1400px] px-4 py-14 md:px-6 lg:px-8">
@@ -354,7 +354,7 @@ function cerrarDropdown() {
     <div
       v-show="menuAbierto"
       id="menu-movil"
-      class="bg-[#3a3a3d] lg:hidden"
+      class="bg-[#2D2D2D] lg:hidden"
     >
       <div class="mx-auto max-w-[1400px] px-4 py-4 md:px-6">
         <ul class="flex flex-col gap-1">
