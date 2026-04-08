@@ -25,7 +25,7 @@ defineProps({
       <img
         :src="imagen"
         :alt="alt"
-        class="h-[290px] w-full object-cover md:h-[320px] xl:h-[340px]"
+        class="aspect-[1.75/1] w-full object-cover"
       >
     </div>
 
