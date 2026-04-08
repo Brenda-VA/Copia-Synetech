@@ -1,24 +1,21 @@
-<script setup lang="ts">
-withDefaults(
-  defineProps<{
-    texto?: string
-    degradado?: boolean
-  }>(),
-  {
-    texto: 'Descubrir',
-    degradado: false
+<script setup>
+defineProps({
+  texto: {
+    type: String,
+    default: 'Descubre más'
   }
-)
+})
 </script>
 
 <template>
   <button
     type="button"
-    class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition hover:scale-[1.02]"
-    :class="degradado
-      ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950'
-      : 'border border-white/15 bg-white text-slate-950 hover:bg-slate-200'"
+    class="group inline-flex rounded-full bg-white p-[2px]"
   >
-    {{ texto }}
+    <span
+      class="inline-flex min-w-[220px] items-center justify-center rounded-full bg-black px-8 py-3 text-sm font-semibold text-white group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:via-purple-500 group-hover:to-cyan-400"
+    >
+      {{ texto }}
+    </span>
   </button>
 </template>
