@@ -20,7 +20,7 @@ function cerrarMenu() {
       <!-- Logo -->
       <a href="#" class="flex items-center shrink-0">
         <img
-          src="/imagenes/logo_synetech.png"
+          src="/imagenes/logo-synetech-blanco.png"
           alt="Logo Synetech"
           class="h-7 w-auto md:h-8"
         >
