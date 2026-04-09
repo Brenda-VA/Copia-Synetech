@@ -14,7 +14,7 @@ defineProps({
     class="group inline-flex rounded-full p-px"
   >
     <span
-      class="flex h-4 w-4 items-center justify-center rounded-full bg-black text-white transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:via-purple-500 group-hover:to-cyan-400"
+      class="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:via-purple-500 group-hover:to-cyan-400"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -24,7 +24,7 @@ defineProps({
         stroke-width="2.2"
         stroke-linecap="round"
         stroke-linejoin="round"
-        class="h-3.5 w-3.5"
+        class="h-4.5 w-4.5"
       >
         <path d="M8 5l8 7-8 7" />
       </svg>

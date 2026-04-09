@@ -3,7 +3,7 @@
 
 <template>
   <main class="min-h-screen bg-slate-950 text-white">
-    <!--- Los autoimports se hacen esc la esribiendo con la primera letra en mayuscula el nombre de la carpeta -->
+    <!--- Los autoimports se hacen esribiendo con la primera letra en mayuscula el nombre de la carpeta -->
     <LayoutBarraNavegacion />
     <SeccionesHeroCarrusel />
     <SeccionesSeccionCaracteristicasIA />
