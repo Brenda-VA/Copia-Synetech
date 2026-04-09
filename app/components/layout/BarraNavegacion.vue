@@ -9,7 +9,9 @@ const submenuMovilActivo = ref(null)
 
 /* datos del navbar
 en vez de escribir los links uno por uno en el template,
-se guardan aquí como datos en arrays y luego se pintan con v-for */
+se guardan aquí como datos en arrays y luego se pintan con v-for 
+
+datos del navbar*/
 const enlacesNavegacion = [
   {
     id: 1,
@@ -52,6 +54,7 @@ const enlacesNavegacion = [
 ]
 
 // cada dropdown tiene sus bloques y sus links dentro de arrays
+
 const dropdownsEscritorio = {
   pantallas: {
     clave: 'pantallas',
