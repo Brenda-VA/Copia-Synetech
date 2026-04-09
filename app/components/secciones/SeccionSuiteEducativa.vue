@@ -12,14 +12,14 @@ import TarjetaSuite from '../ui/TarjetaSuite.vue'
 
 /*Estos imports son de Swiper.
 Swiper es la librería externa que usamos para construir el carrusel.
-Aquí Vue no “inventa” el slider: simplemente integra estos componentes de Swiper.
-import { Swiper, SwiperSlide } from 'swiper/vue'*/
+Aquí Vue no “inventa” el slider: simplemente integra estos componentes de Swiper.*/
+import { Swiper, SwiperSlide } from 'swiper/vue'
 
 /*modules
 Navigation es un módulo extra de Swiper.
 Swiper funciona por piezas: tú activas solo lo que necesitas.
-Aquí lo necesitamos para que los botones de anterior/siguiente controlen el carrusel.
-import { Navigation } from 'swiper/modules'*/
+Aquí lo necesitamos para que los botones de anterior/siguiente controlen el carrusel.*/
+import { Navigation } from 'swiper/modules'
 
 /* estilos externos
 Estos imports no son lógica de Vue, sino estilos CSS que Swiper necesita
@@ -227,7 +227,7 @@ const tarjetasSuite = [
 
 <style scoped>
 /* estilos */
-/* Aquí estás en la capa de presentación.
+/* capa de presentación.
    Esta zona no define datos ni lógica de Vue.
    Solo ajusta cómo se ve el resultado final. */
 
@@ -247,7 +247,7 @@ const tarjetasSuite = [
 }
 
 /* estados de swiper */
-/* Esto ya es presentación pura: solo cambia cómo se ven
+/* Esto solo cambia cómo se ven
    los botones cuando Swiper los marca como deshabilitados. */
 :deep(.suite-swiper .swiper-button-disabled) {
   opacity: 0.45;

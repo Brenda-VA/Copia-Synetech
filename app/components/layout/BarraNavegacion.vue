@@ -1,10 +1,196 @@
 <script setup>
-import { ref, watch, onBeforeUnmount } from 'vue'
+import { ref, watch, onBeforeUnmount, computed } from 'vue'
 
+// estado
+// aquí guardamos qué cosas están abiertas o cerradas
 const menuAbierto = ref(false)
 const menuActivo = ref(null)
 const submenuMovilActivo = ref(null)
 
+/* datos del navbar
+en vez de escribir los links uno por uno en el template,
+se guardan aquí como datos en arrays y luego se pintan con v-for */
+const enlacesNavegacion = [
+  {
+    id: 1,
+    texto: 'Pantallas Interactivas',
+    href: '#',
+    tipo: 'dropdown',
+    clave: 'pantallas'
+  },
+  {
+    id: 2,
+    texto: 'Pantallas LED',
+    href: '#',
+    tipo: 'link'
+  },
+  {
+    id: 3,
+    texto: 'Soporte',
+    href: '#',
+    tipo: 'dropdown',
+    clave: 'soporte'
+  },
+  {
+    id: 4,
+    texto: 'EdBlog',
+    href: '#',
+    tipo: 'link'
+  },
+  {
+    id: 5,
+    texto: 'Solicita una Demo',
+    href: '#',
+    tipo: 'link'
+  },
+  {
+    id: 6,
+    texto: 'Idioma',
+    tipo: 'idioma',
+    clave: 'idioma'
+  }
+]
+
+// cada dropdown tiene sus bloques y sus links dentro de arrays
+const dropdownsEscritorio = {
+  pantallas: {
+    clave: 'pantallas',
+    maxWidth: 'max-w-[860px]',
+    columnas: [
+      {
+        titulo: 'Pantallas Interactivas',
+        links: ['Piscis', 'Taurus', 'Gemini']
+      },
+      {
+        titulo: 'Software Educativo',
+        links: ['Synetech Class', 'Synetech OS', 'Synetech DMS', 'Synetech Share']
+      },
+      {
+        titulo: 'Inteligencia Artificial',
+        links: ['Synetech IA']
+      }
+    ]
+  },
+  soporte: {
+    clave: 'soporte',
+    maxWidth: 'max-w-[860px]',
+    columnas: [
+      {
+        titulo: 'Descargas',
+        links: ['Pantallas Interactivas']
+      },
+      {
+        titulo: 'Te ayudamos',
+        links: ['Contacta con soporte', 'Reparación de pantallas LED']
+      },
+      {
+        titulo: 'Información Adicional',
+        links: ['Garantía', 'Comprueba la cobertura']
+      }
+    ]
+  },
+  idioma: {
+    clave: 'idioma',
+    maxWidth: 'max-w-[280px]',
+    columnas: [
+      {
+        titulo: 'Elige tu idioma',
+        links: ['Español', 'English', 'Deutsch']
+      }
+    ]
+  }
+}
+
+/* datos del menú móvil / tablet pequeña
+mismo enfoque: datos primero, template después*/
+const enlacesMovil = [
+  {
+    id: 1,
+    texto: 'Pantallas Interactivas',
+    tipo: 'dropdown',
+    clave: 'pantallas',
+    bloques: [
+      {
+        titulo: 'Pantallas Interactivas',
+        estilo: 'destacado',
+        links: ['Piscis', 'Taurus', 'Gemini']
+      },
+      {
+        titulo: 'Software Educativo',
+        estilo: 'destacado',
+        links: ['Synetech Class', 'Synetech OS', 'Synetech DMS', 'Synetech Share']
+      },
+      {
+        titulo: 'Inteligencia Artificial',
+        estilo: 'destacado',
+        links: ['Synetech IA']
+      }
+    ]
+  },
+  {
+    id: 2,
+    texto: 'Pantallas LED',
+    href: '#',
+    tipo: 'link'
+  },
+  {
+    id: 3,
+    texto: 'Soporte',
+    tipo: 'dropdown',
+    clave: 'soporte',
+    bloques: [
+      {
+        titulo: 'Descargas',
+        estilo: 'normal',
+        links: ['Pantallas Interactivas']
+      },
+      {
+        titulo: 'Te ayudamos',
+        estilo: 'normal',
+        links: ['Contacta con soporte', 'Reparación de pantallas LED']
+      },
+      {
+        titulo: 'Información adicional',
+        estilo: 'normal',
+        links: ['Garantía', 'Comprueba la cobertura']
+      }
+    ]
+  },
+  {
+    id: 4,
+    texto: 'EdBlog',
+    href: '#',
+    tipo: 'link'
+  },
+  {
+    id: 5,
+    texto: 'Solicita una Demo',
+    href: '#',
+    tipo: 'link'
+  },
+  {
+    id: 6,
+    texto: 'Idioma',
+    tipo: 'idioma',
+    clave: 'idioma',
+    bloques: [
+      {
+        titulo: '',
+        estilo: 'normal',
+        links: ['Español', 'English', 'Deutsch']
+      }
+    ]
+  }
+]
+
+// computed
+//sirve para no tener 3 bloques duplicados en escritorio.
+// según el menú activo se saca la info del dropdown correspondiente
+const dropdownActivoEscritorio = computed(() => {
+  return menuActivo.value ? dropdownsEscritorio[menuActivo.value] : null
+})
+
+// funciones de control
 function alternarMenu() {
   menuAbierto.value = !menuAbierto.value
 
@@ -30,12 +216,16 @@ function alternarSubmenuMovil(nombre) {
   submenuMovilActivo.value = submenuMovilActivo.value === nombre ? null : nombre
 }
 
+// bloqueo del scroll del body cuando el menú móvil está abierto
+// esto evita que el fondo de la página siga moviéndose detrás
 watch(menuAbierto, (abierto) => {
   if (typeof document !== 'undefined') {
     document.body.style.overflow = abierto ? 'hidden' : ''
   }
 })
 
+// limpieza
+// si el componente se desmonta, devolvemos el scroll a la normalidad
 onBeforeUnmount(() => {
   if (typeof document !== 'undefined') {
     document.body.style.overflow = ''
@@ -52,6 +242,7 @@ onBeforeUnmount(() => {
       class="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-4 md:px-6 lg:px-8"
       aria-label="Navegación principal"
     >
+      <!-- logo -->
       <a href="#" class="flex shrink-0 items-center">
         <img
           src="/imagenes/logo-synetech-blanco.png"
@@ -60,64 +251,37 @@ onBeforeUnmount(() => {
         >
       </a>
 
-      <!-- Escritorio / tablet grande -->
+      <!-- escritorio / tablet grande
+    aquí ya no escribimos los items a mano 
+      ahora salen del array enlacesNavegacion -->
       <ul class="hidden items-center gap-7 text-sm font-medium text-white/90 lg:flex xl:gap-8">
         <li
+          v-for="enlace in enlacesNavegacion"
+          :key="enlace.id"
           class="relative"
-          @mouseenter="abrirDropdown('pantallas')"
+          @mouseenter="enlace.clave ? abrirDropdown(enlace.clave) : null"
         >
+          <!-- link normal -->
           <a
-            href="#"
+            v-if="enlace.tipo === 'link'"
+            :href="enlace.href"
             class="border-b border-transparent pb-1 transition duration-200 hover:border-white hover:text-white"
           >
-            Pantallas Interactivas
+            {{ enlace.texto }}
           </a>
-        </li>
 
-        <li>
+          <!-- link con dropdown -->
           <a
-            href="#"
+            v-else-if="enlace.tipo === 'dropdown'"
+            :href="enlace.href"
             class="border-b border-transparent pb-1 transition duration-200 hover:border-white hover:text-white"
           >
-            Pantallas LED
+            {{ enlace.texto }}
           </a>
-        </li>
 
-        <li
-          class="relative"
-          @mouseenter="abrirDropdown('soporte')"
-        >
-          <a
-            href="#"
-            class="border-b border-transparent pb-1 transition duration-200 hover:border-white hover:text-white"
-          >
-            Soporte
-          </a>
-        </li>
-
-        <li>
-          <a
-            href="#"
-            class="border-b border-transparent pb-1 transition duration-200 hover:border-white hover:text-white"
-          >
-            EdBlog
-          </a>
-        </li>
-
-        <li>
-          <a
-            href="#"
-            class="border-b border-transparent pb-1 transition duration-200 hover:border-white hover:text-white"
-          >
-            Solicita una Demo
-          </a>
-        </li>
-
-        <li
-          class="relative"
-          @mouseenter="abrirDropdown('idioma')"
-        >
+          <!-- botón idioma con icono -->
           <button
+            v-else
             type="button"
             class="flex items-center justify-center border-b border-transparent pb-1 text-white transition duration-200 hover:border-white hover:text-white"
             aria-label="Cambiar idioma"
@@ -141,7 +305,7 @@ onBeforeUnmount(() => {
         </li>
       </ul>
 
-      <!-- Botón móvil / tablet pequeña -->
+      <!-- botón móvil / tablet pequeña -->
       <button
         type="button"
         class="relative inline-flex h-[38px] w-[38px] items-center justify-center text-white lg:hidden"
@@ -159,118 +323,51 @@ onBeforeUnmount(() => {
       </button>
     </nav>
 
-    <!-- Dropdown escritorio: Pantallas -->
+    <!-- dropdown escritorio genérico -->
+    <!-- en vez de tener 3 bloques separados, usamos uno solo -->
+    <!-- y lo alimentamos con dropdownActivoEscritorio -->
     <div
-      v-show="menuActivo === 'pantallas'"
+      v-if="dropdownActivoEscritorio"
       class="hidden bg-[#2D2D2D] lg:block"
-      @mouseenter="abrirDropdown('pantallas')"
+      @mouseenter="abrirDropdown(dropdownActivoEscritorio.clave)"
     >
       <div class="mx-auto max-w-[1400px] px-5 py-12 md:px-6 lg:px-8 xl:py-14">
-        <div class="grid max-w-[860px] grid-cols-3 gap-x-14 xl:gap-x-16">
-          <div>
+        <div
+          :class="[
+            dropdownActivoEscritorio.maxWidth,
+            dropdownActivoEscritorio.columnas.length > 1
+              ? 'grid grid-cols-3 gap-x-14 xl:gap-x-16'
+              : ''
+          ]"
+        >
+          <div
+            v-for="columna in dropdownActivoEscritorio.columnas"
+            :key="columna.titulo"
+          >
             <p class="text-[1rem] font-normal text-white/55">
-              Pantallas Interactivas
+              {{ columna.titulo }}
             </p>
 
             <ul class="mt-9 space-y-4 text-[1rem] font-normal text-white">
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Piscis</a></li>
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Taurus</a></li>
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Gemini</a></li>
+              <li
+                v-for="link in columna.links"
+                :key="link"
+              >
+                <a
+                  href="#"
+                  class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white"
+                >
+                  {{ link }}
+                </a>
+              </li>
             </ul>
           </div>
-
-          <div>
-            <p class="text-[1rem] font-normal text-white/55">
-              Software Educativo
-            </p>
-
-            <ul class="mt-9 space-y-4 text-[1rem] font-normal text-white">
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Synetech Class</a></li>
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Synetech OS</a></li>
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Synetech DMS</a></li>
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Synetech Share</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <p class="text-[1rem] font-normal text-white/55">
-              Inteligencia Artificial
-            </p>
-
-            <ul class="mt-9 space-y-4 text-[1rem] font-normal text-white">
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Synetech IA</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Dropdown escritorio: Soporte -->
-    <div
-      v-show="menuActivo === 'soporte'"
-      class="hidden bg-[#2D2D2D] lg:block"
-      @mouseenter="abrirDropdown('soporte')"
-    >
-      <div class="mx-auto max-w-[1400px] px-5 py-12 md:px-6 lg:px-8 xl:py-14">
-        <div class="grid max-w-[860px] grid-cols-3 gap-x-14 xl:gap-x-16">
-          <div>
-            <p class="text-[1rem] font-normal text-white/55">
-              Descargas
-            </p>
-
-            <ul class="mt-9 space-y-4 text-[1rem] font-normal text-white">
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Pantallas Interactivas</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <p class="text-[1rem] font-normal text-white/55">
-              Te ayudamos
-            </p>
-
-            <ul class="mt-9 space-y-4 text-[1rem] font-normal text-white">
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Contacta con soporte</a></li>
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Reparación de pantallas LED</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <p class="text-[1rem] font-normal text-white/55">
-              Información Adicional
-            </p>
-
-            <ul class="mt-9 space-y-4 text-[1rem] font-normal text-white">
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Garantía</a></li>
-              <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Comprueba la cobertura</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Dropdown escritorio: Idioma -->
-    <div
-      v-show="menuActivo === 'idioma'"
-      class="hidden bg-[#2D2D2D] lg:block"
-      @mouseenter="abrirDropdown('idioma')"
-    >
-      <div class="mx-auto max-w-[1400px] px-5 py-12 md:px-6 lg:px-8 xl:py-14">
-        <div class="max-w-[280px] text-white">
-          <p class="text-[1rem] font-normal text-white/55">
-            Elige tu idioma
-          </p>
-
-          <ul class="mt-9 space-y-4 text-[1rem] font-normal text-white">
-            <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Español</a></li>
-            <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">English</a></li>
-            <li><a href="#" class="inline-block border-b border-transparent pb-[2px] transition duration-200 hover:border-white hover:text-white">Deutsch</a></li>
-          </ul>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Desplegable móvil / tablet pequeña -->
+  <!-- desplegable móvil / tablet pequeña -->
   <Teleport to="body">
     <Transition
       enter-active-class="transition-all duration-300 ease-out"
@@ -294,252 +391,163 @@ onBeforeUnmount(() => {
             </div>
 
             <div class="relative z-10 h-full overflow-y-auto px-6 pb-10 pt-10 md:px-8 md:pt-12">
+              <!-- aquí también pintamos todo desde un array -->
               <ul class="flex flex-col gap-7 md:gap-8">
-                <!-- Pantallas Interactivas -->
-                <li>
-                  <button
-                    type="button"
-                    class="grupo-linea w-full text-left"
-                    @click="alternarSubmenuMovil('pantallas')"
+                <li
+                  v-for="enlace in enlacesMovil"
+                  :key="enlace.id"
+                >
+                  <!-- link normal -->
+                  <a
+                    v-if="enlace.tipo === 'link'"
+                    :href="enlace.href"
+                    class="grupo-linea block"
+                    @click="cerrarMenu"
                   >
                     <span class="block text-[18px] font-semibold tracking-[-0.02em] text-white md:text-[19px]">
-                      Pantallas Interactivas
+                      {{ enlace.texto }}
                     </span>
                     <span class="linea-seccion"></span>
-                  </button>
+                  </a>
 
-                  <Transition
-                    enter-active-class="transition-all duration-300 ease-out"
-                    leave-active-class="transition-all duration-220 ease-in"
-                    enter-from-class="opacity-0"
-                    enter-to-class="opacity-100"
-                    leave-from-class="opacity-100"
-                    leave-to-class="opacity-0"
-                  >
-                    <div
-                      v-if="submenuMovilActivo === 'pantallas'"
-                      class="overflow-hidden pt-6"
+                  <!-- dropdown móvil normal -->
+                  <template v-else-if="enlace.tipo === 'dropdown'">
+                    <button
+                      type="button"
+                      class="grupo-linea w-full text-left"
+                      @click="alternarSubmenuMovil(enlace.clave)"
                     >
-                      <Transition
-                        appear
-                        enter-active-class="transition-all duration-300 ease-out"
-                        leave-active-class="transition-all duration-220 ease-in"
-                        enter-from-class="-translate-x-8 opacity-0"
-                        enter-to-class="translate-x-0 opacity-100"
-                        leave-from-class="translate-x-0 opacity-100"
-                        leave-to-class="-translate-x-6 opacity-0"
+                      <span class="block text-[18px] font-semibold tracking-[-0.02em] text-white md:text-[19px]">
+                        {{ enlace.texto }}
+                      </span>
+                      <span class="linea-seccion"></span>
+                    </button>
+
+                    <Transition
+                      enter-active-class="transition-all duration-300 ease-out"
+                      leave-active-class="transition-all duration-220 ease-in"
+                      enter-from-class="opacity-0"
+                      enter-to-class="opacity-100"
+                      leave-from-class="opacity-100"
+                      leave-to-class="opacity-0"
+                    >
+                      <div
+                        v-if="submenuMovilActivo === enlace.clave"
+                        class="overflow-hidden pt-6"
                       >
-                        <div class="submenu-contenido">
-                          <div class="space-y-9">
-                            <div>
-                              <p class="submenu-titulo">
-                                Pantallas Interactivas
-                              </p>
-                              <ul class="submenu-lista">
-                                <li><a href="#" class="submenu-enlace" @click="cerrarMenu">Piscis</a></li>
-                                <li><a href="#" class="submenu-enlace" @click="cerrarMenu">Taurus</a></li>
-                                <li><a href="#" class="submenu-enlace" @click="cerrarMenu">Gemini</a></li>
-                              </ul>
-                            </div>
+                        <Transition
+                          appear
+                          enter-active-class="transition-all duration-300 ease-out"
+                          leave-active-class="transition-all duration-220 ease-in"
+                          enter-from-class="-translate-x-8 opacity-0"
+                          enter-to-class="translate-x-0 opacity-100"
+                          leave-from-class="translate-x-0 opacity-100"
+                          leave-to-class="-translate-x-6 opacity-0"
+                        >
+                          <div class="submenu-contenido">
+                            <div class="space-y-9">
+                              <div
+                                v-for="bloque in enlace.bloques"
+                                :key="bloque.titulo"
+                              >
+                                <p class="submenu-titulo">
+                                  {{ bloque.titulo }}
+                                </p>
 
-                            <div>
-                              <p class="submenu-titulo">
-                                Software Educativo
-                              </p>
-                              <ul class="submenu-lista">
-                                <li><a href="#" class="submenu-enlace" @click="cerrarMenu">Synetech Class</a></li>
-                                <li><a href="#" class="submenu-enlace" @click="cerrarMenu">Synetech OS</a></li>
-                                <li><a href="#" class="submenu-enlace" @click="cerrarMenu">Synetech DMS</a></li>
-                                <li><a href="#" class="submenu-enlace" @click="cerrarMenu">Synetech Share</a></li>
-                              </ul>
-                            </div>
-
-                            <div>
-                              <p class="submenu-titulo">
-                                Inteligencia Artificial
-                              </p>
-                              <ul class="submenu-lista">
-                                <li><a href="#" class="submenu-enlace" @click="cerrarMenu">Synetech IA</a></li>
-                              </ul>
+                                <ul
+                                  class="submenu-lista"
+                                  :class="bloque.estilo === 'normal' ? 'submenu-lista--normal' : ''"
+                                >
+                                  <li
+                                    v-for="link in bloque.links"
+                                    :key="link"
+                                  >
+                                    <a
+                                      href="#"
+                                      class="submenu-enlace"
+                                      :class="bloque.estilo === 'normal' ? 'submenu-enlace--normal' : ''"
+                                      @click="cerrarMenu"
+                                    >
+                                      {{ link }}
+                                    </a>
+                                  </li>
+                                </ul>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </Transition>
-                    </div>
-                  </Transition>
-                </li>
+                        </Transition>
+                      </div>
+                    </Transition>
+                  </template>
 
-                <!-- Pantallas LED -->
-                <li>
-                  <a
-                    href="#"
-                    class="grupo-linea block"
-                    @click="cerrarMenu"
-                  >
-                    <span class="block text-[18px] font-semibold tracking-[-0.02em] text-white md:text-[19px]">
-                      Pantallas LED
-                    </span>
-                    <span class="linea-seccion"></span>
-                  </a>
-                </li>
-
-                <!-- Soporte -->
-                <li>
-                  <button
-                    type="button"
-                    class="grupo-linea w-full text-left"
-                    @click="alternarSubmenuMovil('soporte')"
-                  >
-                    <span class="block text-[18px] font-semibold tracking-[-0.02em] text-white md:text-[19px]">
-                      Soporte
-                    </span>
-                    <span class="linea-seccion"></span>
-                  </button>
-
-                  <Transition
-                    enter-active-class="transition-all duration-300 ease-out"
-                    leave-active-class="transition-all duration-220 ease-in"
-                    enter-from-class="opacity-0"
-                    enter-to-class="opacity-100"
-                    leave-from-class="opacity-100"
-                    leave-to-class="opacity-0"
-                  >
-                    <div
-                      v-if="submenuMovilActivo === 'soporte'"
-                      class="overflow-hidden pt-6"
+                  <!-- idioma en móvil -->
+                  <template v-else>
+                    <button
+                      type="button"
+                      class="grupo-linea w-full text-left"
+                      @click="alternarSubmenuMovil(enlace.clave)"
                     >
-                      <Transition
-                        appear
-                        enter-active-class="transition-all duration-300 ease-out"
-                        leave-active-class="transition-all duration-220 ease-in"
-                        enter-from-class="-translate-x-8 opacity-0"
-                        enter-to-class="translate-x-0 opacity-100"
-                        leave-from-class="translate-x-0 opacity-100"
-                        leave-to-class="-translate-x-6 opacity-0"
+                      <span class="block text-white">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="h-[23px] w-[23px]"
+                        >
+                          <circle cx="12" cy="12" r="9" />
+                          <path d="M3 12h18" />
+                          <path d="M12 3a15 15 0 0 1 0 18" />
+                          <path d="M12 3a15 15 0 0 0 0 18" />
+                        </svg>
+                      </span>
+                      <span class="linea-seccion"></span>
+                    </button>
+
+                    <Transition
+                      enter-active-class="transition-all duration-300 ease-out"
+                      leave-active-class="transition-all duration-220 ease-in"
+                      enter-from-class="opacity-0"
+                      enter-to-class="opacity-100"
+                      leave-from-class="opacity-100"
+                      leave-to-class="opacity-0"
+                    >
+                      <div
+                        v-if="submenuMovilActivo === enlace.clave"
+                        class="overflow-hidden pt-6"
                       >
-                        <div class="submenu-contenido">
-                          <div class="space-y-9">
-                            <div>
-                              <p class="submenu-titulo">
-                                Descargas
-                              </p>
-                              <ul class="submenu-lista submenu-lista--normal">
-                                <li><a href="#" class="submenu-enlace submenu-enlace--normal" @click="cerrarMenu">Pantallas Interactivas</a></li>
-                              </ul>
-                            </div>
-
-                            <div>
-                              <p class="submenu-titulo">
-                                Te ayudamos
-                              </p>
-                              <ul class="submenu-lista submenu-lista--normal">
-                                <li><a href="#" class="submenu-enlace submenu-enlace--normal" @click="cerrarMenu">Contacta con soporte</a></li>
-                                <li><a href="#" class="submenu-enlace submenu-enlace--normal" @click="cerrarMenu">Reparación de pantallas LED</a></li>
-                              </ul>
-                            </div>
-
-                            <div>
-                              <p class="submenu-titulo">
-                                Información adicional
-                              </p>
-                              <ul class="submenu-lista submenu-lista--normal">
-                                <li><a href="#" class="submenu-enlace submenu-enlace--normal" @click="cerrarMenu">Garantía</a></li>
-                                <li><a href="#" class="submenu-enlace submenu-enlace--normal" @click="cerrarMenu">Comprueba la cobertura</a></li>
-                              </ul>
-                            </div>
+                        <Transition
+                          appear
+                          enter-active-class="transition-all duration-300 ease-out"
+                          leave-active-class="transition-all duration-220 ease-in"
+                          enter-from-class="-translate-x-8 opacity-0"
+                          enter-to-class="translate-x-0 opacity-100"
+                          leave-from-class="translate-x-0 opacity-100"
+                          leave-to-class="-translate-x-6 opacity-0"
+                        >
+                          <div class="submenu-contenido submenu-contenido--idioma">
+                            <ul class="submenu-lista submenu-lista--normal">
+                              <li
+                                v-for="link in enlace.bloques[0].links"
+                                :key="link"
+                              >
+                                <a
+                                  href="#"
+                                  class="submenu-enlace submenu-enlace--normal"
+                                  @click="cerrarMenu"
+                                >
+                                  {{ link }}
+                                </a>
+                              </li>
+                            </ul>
                           </div>
-                        </div>
-                      </Transition>
-                    </div>
-                  </Transition>
-                </li>
-
-                <!-- EdBlog -->
-                <li>
-                  <a
-                    href="#"
-                    class="grupo-linea block"
-                    @click="cerrarMenu"
-                  >
-                    <span class="block text-[18px] font-semibold tracking-[-0.02em] text-white md:text-[19px]">
-                      EdBlog
-                    </span>
-                    <span class="linea-seccion"></span>
-                  </a>
-                </li>
-
-                <!-- Solicita una Demo -->
-                <li>
-                  <a
-                    href="#"
-                    class="grupo-linea block"
-                    @click="cerrarMenu"
-                  >
-                    <span class="block text-[18px] font-semibold tracking-[-0.02em] text-white md:text-[19px]">
-                      Solicita una Demo
-                    </span>
-                    <span class="linea-seccion"></span>
-                  </a>
-                </li>
-
-                <!-- Idioma -->
-                <li>
-                  <button
-                    type="button"
-                    class="grupo-linea w-full text-left"
-                    @click="alternarSubmenuMovil('idioma')"
-                  >
-                    <span class="block text-white">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.7"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="h-[23px] w-[23px]"
-                      >
-                        <circle cx="12" cy="12" r="9" />
-                        <path d="M3 12h18" />
-                        <path d="M12 3a15 15 0 0 1 0 18" />
-                        <path d="M12 3a15 15 0 0 0 0 18" />
-                      </svg>
-                    </span>
-                    <span class="linea-seccion"></span>
-                  </button>
-
-                  <Transition
-                    enter-active-class="transition-all duration-300 ease-out"
-                    leave-active-class="transition-all duration-220 ease-in"
-                    enter-from-class="opacity-0"
-                    enter-to-class="opacity-100"
-                    leave-from-class="opacity-100"
-                    leave-to-class="opacity-0"
-                  >
-                    <div
-                      v-if="submenuMovilActivo === 'idioma'"
-                      class="overflow-hidden pt-6"
-                    >
-                      <Transition
-                        appear
-                        enter-active-class="transition-all duration-300 ease-out"
-                        leave-active-class="transition-all duration-220 ease-in"
-                        enter-from-class="-translate-x-8 opacity-0"
-                        enter-to-class="translate-x-0 opacity-100"
-                        leave-from-class="translate-x-0 opacity-100"
-                        leave-to-class="-translate-x-6 opacity-0"
-                      >
-                        <div class="submenu-contenido submenu-contenido--idioma">
-                          <ul class="submenu-lista submenu-lista--normal">
-                            <li><a href="#" class="submenu-enlace submenu-enlace--normal" @click="cerrarMenu">Español</a></li>
-                            <li><a href="#" class="submenu-enlace submenu-enlace--normal" @click="cerrarMenu">English</a></li>
-                            <li><a href="#" class="submenu-enlace submenu-enlace--normal" @click="cerrarMenu">Deutsch</a></li>
-                          </ul>
-                        </div>
-                      </Transition>
-                    </div>
-                  </Transition>
+                        </Transition>
+                      </div>
+                    </Transition>
+                  </template>
                 </li>
               </ul>
             </div>
@@ -551,6 +559,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+/* helpers del menú móvil */
 .grupo-linea {
   display: block;
 }
@@ -563,6 +572,7 @@ onBeforeUnmount(() => {
   background: rgba(255, 255, 255, 0.62);
 }
 
+/* estilos del contenido desplegable móvil */
 .submenu-contenido {
   padding-left: 0;
   padding-right: 0;
