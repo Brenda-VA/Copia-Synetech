@@ -1,4 +1,6 @@
 <script setup>
+// defineProps define las "entradas" del componente.
+// Es decir: qué datos espera recibir desde el componente padre.
 defineProps({
   titulo: {
     type: String,
@@ -20,7 +22,10 @@ defineProps({
 </script>
 
 <template>
+  <!-- Esta pieza representa una sola tarjeta -->
+  <!-- No sabe nada del array ni del carrusel -->
   <article class="w-full">
+    <!-- Bloque visual de la imagen -->
     <div class="overflow-hidden rounded-[2rem] bg-white/8">
       <img
         :src="imagen"
@@ -29,6 +34,7 @@ defineProps({
       >
     </div>
 
+    <!-- Bloque visual de texto -->
     <div class="mt-4">
       <h3 class="text-[1.05rem] font-semibold leading-tight text-white md:text-[1.15rem]">
         {{ titulo }}
