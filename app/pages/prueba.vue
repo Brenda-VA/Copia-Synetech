@@ -50,6 +50,7 @@ const tarjetasPrueba = [
     <SeccionesSeccionCaracteristicasIA
       titulo="Recursos digitales para una clase más dinámica"
       :tarjetas="tarjetasPrueba"
+      ruta-flechas="/"
     />
   </main>
 </template>

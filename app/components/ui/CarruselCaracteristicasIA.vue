@@ -25,6 +25,10 @@ const props = defineProps({
   tarjetas: {
     type: Array,
     required: true
+  },
+  rutaFlecha: {
+    type: String,
+    default: ''
   }
 })
 
@@ -34,10 +38,10 @@ const props = defineProps({
 const swiperCaracteristicas = ref(null)
 const indiceActivo = ref(0)
 const autoplayActivo = ref(true)
-
-// módulos de swiper
-// Swiper funciona por módulos.
-// Aquí activo solo lo que necesito en este carrusel.
+/* 
+módulos de swiper
+Swiper funciona por módulos.
+Aquí activo solo lo que necesito en este carrusel. */
 const modulosSwiper = [Autoplay, A11y]
 
 // total de tarjetas

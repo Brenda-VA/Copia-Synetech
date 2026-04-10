@@ -25,6 +25,10 @@ const props = defineProps({
   formato: {
     type: String,
     default: 'estandar'
+  },
+  rutaFlecha: {
+    type: String,
+    default: ''
   }
 })
 
@@ -101,7 +105,7 @@ const esAncha = props.formato === 'ancha'
     </div>
 
     <div class="absolute bottom-5 right-5">
-      <BotonCircular :aria-label="`Abrir ${tarjeta.titulo}`" />
+      <BotonCircular :aria-label="`Abrir ${tarjeta.titulo}`" :to="rutaFlecha"/>
     </div>
   </article>
 
@@ -146,7 +150,7 @@ const esAncha = props.formato === 'ancha'
       class="absolute z-10"
       :class="esTablet ? 'bottom-5 right-5' : 'bottom-5 right-5 md:bottom-6 md:right-6'"
     >
-      <BotonCircular :aria-label="`Abrir ${tarjeta.titulo}`" />
+      <BotonCircular :aria-label="`Abrir ${tarjeta.titulo}`" :to="rutaFlecha"/>
     </div>
   </article>
 
@@ -189,7 +193,7 @@ const esAncha = props.formato === 'ancha'
       class="absolute"
       :class="esTablet ? 'bottom-5 right-5' : 'bottom-5 right-5 md:bottom-6 md:right-6'"
     >
-      <BotonCircular :aria-label="`Abrir ${tarjeta.titulo}`" />
+      <BotonCircular :aria-label="`Abrir ${tarjeta.titulo}`" :to="rutaFlecha"/>
     </div>
   </article>
 </template>

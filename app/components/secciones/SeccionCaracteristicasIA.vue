@@ -35,6 +35,10 @@ const { titulo, tarjetas: tarjetasProp } = defineProps({
   tarjetas: {
     type: Array,
     default: () => []
+  },
+  rutaFlechas: {
+    type: String,
+    default: ''
   }
 })
 
@@ -123,6 +127,7 @@ const tarjetaTabletAncha = tarjetas[4]
       <UiCarruselCaracteristicasIA
         class="mt-8 lg:hidden"
         :tarjetas="tarjetas"
+        :ruta-flecha="rutaFlechas"
       />
 
       <!-- tablet grande -->
@@ -138,6 +143,7 @@ const tarjetaTabletAncha = tarjetas[4]
             :key="tarjeta.id"
             :tarjeta="tarjeta"
             vista="tablet"
+            :ruta-flecha="rutaFlechas"
           />
         </div>
 
@@ -146,6 +152,7 @@ const tarjetaTabletAncha = tarjetas[4]
             :tarjeta="tarjetaTabletAncha"
             vista="tablet"
             formato="ancha"
+            :ruta-flecha="rutaFlechas"
           />
         </div>
       </div>
@@ -160,6 +167,7 @@ const tarjetaTabletAncha = tarjetas[4]
             :key="tarjeta.id"
             :tarjeta="tarjeta"
             vista="desktop"
+            :ruta-flecha="rutaFlechas"
           />
         </div>
 
@@ -169,6 +177,7 @@ const tarjetaTabletAncha = tarjetas[4]
             :key="tarjeta.id"
             :tarjeta="tarjeta"
             vista="desktop"
+            :ruta-flecha="rutaFlechas"
           />
         </div>
       </div>
