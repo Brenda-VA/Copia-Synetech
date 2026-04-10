@@ -3,16 +3,17 @@
 // Esta componente hija se queda con todo lo que pertenece al carrusel.
 // Así no mezclo la lógica de Swiper con el layout general de la sección padre.
 
-// imports
-// Vue me da el estado y los ciclos de vida.
-// Los necesito porque el carrusel tiene autoplay, índice activo y actualización en resize.
-import { ref, computed, nextTick, onMounted, onBeforeUnmount } from 'vue'
+/*IMPORTANTE SOBRE IMPORTS: ------------------
+En nuxt las utilidades de Vue no necesitan importarse pq ya se hacen automaticamente, como con:
+ref, computed, watch, nextTick, onMounted, onBeforeUnmount, defineProps -----------------------*/ 
+
 
 // Esta es la tarjeta reusable.
 // El carrusel no pinta la tarjeta directamente: la delega a otra hija.
+//ESTE IMPORT SI ES NECESARIO PQ ES UN COMPONENTE
 import TarjetaCaracteristicaIA from './TarjetaCaracteristicaIA.vue'
 
-// Estos vienen de Swiper.
+// Estos vienen de Swiper. TMB ES NECESARIO IMPORTARLOS PQ NO SON DE VUE
 // Vue pinta la estructura, pero Swiper pone el comportamiento real de slider.
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, A11y } from 'swiper/modules'
@@ -30,6 +31,7 @@ const props = defineProps({
     type: String,
     default: ''
   }
+
 })
 
 // estado del swiper
@@ -148,9 +150,6 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- carrusel -->
-  <!-- Esta componente hija solo se encarga de la versión con swiper.
-       El padre decide cuándo usarla; aquí dentro ya solo pienso en el slider. -->
   <div class="overflow-hidden">
     <Swiper
       :modules="modulosSwiper"
@@ -186,17 +185,11 @@ onBeforeUnmount(() => {
           spaceBetween: 20
         }
       }"
-      class="ia-swiper"
+      class="w-full overflow-hidden"
       @swiper="guardarSwiper"
       @slideChange="cambiarIndice"
       @touchStart="alArrastrarSwiper"
     >
-      <!-- flujo de datos -->
-      <!-- Aquí se ve el recorrido completo:
-           el padre manda el array tarjetas
-           v-for lo recorre aquí
-           por cada objeto se crea un SwiperSlide
-           y dentro del slide se monta la tarjeta reusable -->
       <SwiperSlide
         v-for="tarjeta in tarjetas"
         :key="tarjeta.id"
@@ -205,16 +198,15 @@ onBeforeUnmount(() => {
         <TarjetaCaracteristicaIA
           :tarjeta="tarjeta"
           vista="movil"
+          :ruta-flecha="rutaFlecha"
         />
       </SwiperSlide>
     </Swiper>
 
-    <!-- controles -->
-    <!-- Esta parte sigue perteneciendo al carrusel porque depende del estado del swiper. -->
     <div class="mt-6 flex items-center justify-center gap-3 md:mt-7">
       <button
         type="button"
-        class="control-autoplay"
+        class="inline-flex h-[2.6rem] w-[2.6rem] items-center justify-center rounded-full bg-[#f6f6f6] text-black/35 transition duration-200 hover:scale-[1.03] md:h-[2.8rem] md:w-[2.8rem]"
         :aria-label="autoplayActivo ? 'Pausar carrusel' : 'Reproducir carrusel'"
         @click="alternarAutoplay"
       >
@@ -241,7 +233,7 @@ onBeforeUnmount(() => {
       </button>
 
       <div
-        class="indicadores-ia"
+        class="inline-flex items-center gap-2 rounded-full bg-[#f6f6f6] px-[0.92rem] py-[0.72rem] md:gap-[0.55rem] md:px-[1.05rem] md:py-[0.8rem]"
         role="tablist"
         aria-label="Indicadores de tarjetas de características IA"
       >
@@ -249,8 +241,10 @@ onBeforeUnmount(() => {
           v-for="indice in totalTarjetas"
           :key="indice"
           type="button"
-          class="indicador-ia"
-          :class="{ 'indicador-ia--activo': indiceActivo === indice - 1 }"
+          class="h-[0.64rem] w-[0.64rem] rounded-full bg-black/35 transition-all duration-300 md:h-[0.68rem] md:w-[0.68rem]"
+          :class="indiceActivo === indice - 1
+            ? 'w-[1.8rem] bg-black/70 md:w-[2.1rem]'
+            : ''"
           :aria-label="`Ir a la tarjeta ${indice}`"
           :aria-pressed="indiceActivo === indice - 1 ? 'true' : 'false'"
           @click="irATarjeta(indice - 1)"
@@ -263,82 +257,14 @@ onBeforeUnmount(() => {
 <style scoped>
 /* estilos del carrusel */
 /* Todo lo que depende visualmente del swiper móvil se queda aquí,
-   así el padre no se llena de CSS que no necesita conocer. */
-
-:deep(.ia-swiper) {
-  width: 100%;
-  overflow: hidden;
-}
-
-:deep(.ia-swiper .swiper-wrapper) {
+   así el padre no se llena de CSS que no necesita conocer.
+Este css si es importante de dejar pq afecta a clases de swiper  */
+:deep(.swiper-wrapper) {
   align-items: stretch;
 }
 
-:deep(.ia-swiper .swiper-slide) {
+:deep(.swiper-slide) {
   height: auto;
   min-width: 0;
-}
-
-.control-autoplay {
-  display: inline-flex;
-  height: 2.6rem;
-  width: 2.6rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background: #f6f6f6;
-  color: rgba(0, 0, 0, 0.34);
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.control-autoplay:hover {
-  transform: scale(1.03);
-}
-
-.indicadores-ia {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  border-radius: 9999px;
-  background: #f6f6f6;
-  padding: 0.72rem 0.92rem;
-}
-
-.indicador-ia {
-  height: 0.64rem;
-  width: 0.64rem;
-  border-radius: 9999px;
-  background: rgba(0, 0, 0, 0.34);
-  transition:
-    width 0.32s ease,
-    transform 0.32s ease,
-    background-color 0.32s ease,
-    opacity 0.32s ease;
-}
-
-.indicador-ia--activo {
-  width: 1.8rem;
-  background: rgba(0, 0, 0, 0.72);
-}
-
-@media (min-width: 768px) {
-  .control-autoplay {
-    height: 2.8rem;
-    width: 2.8rem;
-  }
-
-  .indicadores-ia {
-    gap: 0.55rem;
-    padding: 0.8rem 1.05rem;
-  }
-
-  .indicador-ia {
-    height: 0.68rem;
-    width: 0.68rem;
-  }
-
-  .indicador-ia--activo {
-    width: 2.1rem;
-  }
 }
 </style>
