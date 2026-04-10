@@ -5,17 +5,43 @@
 // Así queda más fácil de leer y también más fácil de escalar si luego añadimos más variantes.
 
 // imports
-// El carrusel es un hijo especializado: solo se encarga de móvil y tablet pequeña.
-import CarruselCaracteristicasIA from '../ui/CarruselCaracteristicasIA.vue'
+/* Import de ejemplo, no sirve pq ya le hice el autoimport en las etiquetas:
+El carrusel es un hijo especializado: solo se encarga de móvil y tablet pequeña.
+import CarruselCaracteristicasIA from '../ui/CarruselCaracteristicasIA.vue' */
 
-// La tarjeta reusable es otra hija.
-// Esta la uso en tablet grande y desktop para no repetir el HTML de cada tarjeta.
-import TarjetaCaracteristicaIA from '../ui/TarjetaCaracteristicaIA.vue'
+/* Import de ejemplo, no sirve pq ya le hice el autoimport en las etiquetas:
+La tarjeta reusable es otra hija.
+Esta la uso en tablet grande y desktop para no repetir el HTML de cada tarjeta.
+import TarjetaCaracteristicaIA from '../ui/UiTarjetaCaracteristicaIA.vue' */
 
-// datos
-// Los datos siguen viviendo aquí porque este es el padre.
-// Eso deja muy claro el flujo: aquí nacen los datos, y desde aquí los mando a los hijos por props.
-const tarjetas = [
+
+
+// props
+/*NUEVO CAMBIO:
+Los hijos de este componente (CarruselCaracteristicasIA y TarjetaCaracteristicasIA ya usaban props, pero el pade( este archivo) no,
+así que se cambió el código para que este tmb acepte datos dinamicos con props haciendo que la nueva pagina pueda usar la misma estructura 
+sin duplicar codigo ------------------> IMPORTANTE*/
+
+
+
+/* Se definen propiedades externas para permitir la reutilización de la sección.
+Si se reciben datos desde fuera (por ejemplo desde otra página), estos tendrán prioridad.
+En caso contrario, se utilizarán valores por defecto definidos en este componente. */
+const { titulo, tarjetas: tarjetasProp } = defineProps({
+  titulo: {
+    type: String,
+    default: 'La pantalla interactiva con IA que está revolucionando la educación en los colegios'
+  },
+  tarjetas: {
+    type: Array,
+    default: () => []
+  }
+})
+
+// datos por defecto
+// Este array actúa como fallback en caso de que no se pasen tarjetas desde el exterior.
+// Permite que el componente siga funcionando de forma autónoma (por ejemplo en la home).
+const tarjetasDefault = [
   {
     id: 1,
     tipo: 'imagen-fondo',
@@ -60,9 +86,15 @@ const tarjetas = [
   }
 ]
 
+// selección de datos
+// Se priorizan las tarjetas recibidas por props.
+// Si no existen o están vacías, se utilizan las tarjetas por defecto.
+// Esto hace que el componente sea reutilizable sin romper su funcionamiento original.
+const tarjetas = tarjetasProp.length ? tarjetasProp : tarjetasDefault
+
 // slices
-// Estos recortes me ayudan a montar layouts distintos sin reescribir ni duplicar datos.
-// Sigo usando el mismo array base, pero según la vista enseño un grupo u otro.
+// Se generan subconjuntos del array principal para adaptar el layout según el breakpoint.
+// De esta forma se evita duplicar datos y se mantiene una única fuente de verdad.
 const tarjetasSuperiores = tarjetas.slice(0, 3)
 const tarjetasInferiores = tarjetas.slice(3)
 const tarjetasTabletSuperiores = tarjetas.slice(0, 4)
@@ -71,41 +103,37 @@ const tarjetaTabletAncha = tarjetas[4]
 
 <template>
   <!-- sección padre -->
-  <!-- Este bloque monta el título y decide qué hijo usar según el breakpoint.
-       O sea: aquí no vive la lógica del swiper, aquí vive la coordinación general. -->
+  <!-- Este contenedor define la estructura general de la sección.
+       Su responsabilidad es coordinar qué layout se muestra según el dispositivo. -->
   <section class="bg-[#ececec] py-12 md:py-14 xl:py-16">
     <div class="mx-auto max-w-[1440px] px-4 md:px-8 xl:px-10">
+
       <!-- cabecera -->
-      <!-- Esta parte es estructura + presentación.
-           Vue aquí solo pinta el contenido; el look lo da sobre todo Tailwind. -->
+      <!-- El título se recibe por props, lo que permite reutilizar la sección con distintos contenidos.
+           Se mantiene una estructura visual consistente independientemente del texto mostrado. -->
       <h2
         class="max-w-[1320px] text-[2.2rem] font-semibold leading-[1.15] tracking-tight text-black md:text-[3.2rem] xl:text-[3.75rem]"
       >
-        La pantalla interactiva con IA que está
-        <span class="bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
-          revolucionando
-        </span>
-        la educación en los colegios
+        {{ titulo }}
       </h2>
 
       <!-- móvil + tablet pequeña -->
-      <!-- Aquí no me llevo el swiper al padre.
-           Lo separo porque la lógica del carrusel ya es una responsabilidad propia. -->
-      <CarruselCaracteristicasIA
+      <!-- Se delega completamente la responsabilidad del carrusel a un componente hijo.
+           El padre únicamente le pasa los datos necesarios mediante props. -->
+      <UiCarruselCaracteristicasIA
         class="mt-8 lg:hidden"
         :tarjetas="tarjetas"
       />
 
       <!-- tablet grande -->
-      <!-- En este rango no quiero swiper.
-           Aquí el padre decide usar un grid específico y reutiliza la misma tarjeta hija. -->
+      <!-- En este breakpoint se abandona el carrusel y se utiliza un layout en grid.
+           Se reutiliza la componente de tarjeta para mantener consistencia visual. -->
       <div class="mt-8 hidden lg:block xl:hidden">
         <div class="grid gap-6 lg:grid-cols-2">
           <!-- render dinámico -->
-          <!-- v-for recorre los datos del padre.
-               Por cada objeto se crea una tarjeta.
-               La tarjeta no sabe nada del array completo: solo recibe una tarjeta concreta. -->
-          <TarjetaCaracteristicaIA
+          <!-- Se recorre el array y se renderiza una tarjeta por cada elemento.
+               Cada tarjeta recibe únicamente los datos que necesita. -->
+          <UiTarjetaCaracteristicaIA
             v-for="tarjeta in tarjetasTabletSuperiores"
             :key="tarjeta.id"
             :tarjeta="tarjeta"
@@ -114,7 +142,7 @@ const tarjetaTabletAncha = tarjetas[4]
         </div>
 
         <div class="mt-6">
-          <TarjetaCaracteristicaIA
+          <UiTarjetaCaracteristicaIA
             :tarjeta="tarjetaTabletAncha"
             vista="tablet"
             formato="ancha"
@@ -123,11 +151,11 @@ const tarjetaTabletAncha = tarjetas[4]
       </div>
 
       <!-- desktop -->
-      <!-- El desktop mantiene su estructura actual,
-           pero ahora usa la componente reusable para no repetir tanto marcado. -->
+      <!-- Se mantiene la estructura en dos bloques para escritorio,
+           reutilizando la misma componente de tarjeta para evitar duplicación de código. -->
       <div class="hidden xl:block">
         <div class="mt-8 grid gap-6 xl:mt-10 xl:grid-cols-3">
-          <TarjetaCaracteristicaIA
+          <UiTarjetaCaracteristicaIA
             v-for="tarjeta in tarjetasSuperiores"
             :key="tarjeta.id"
             :tarjeta="tarjeta"
@@ -136,7 +164,7 @@ const tarjetaTabletAncha = tarjetas[4]
         </div>
 
         <div class="mt-6 grid gap-6 xl:grid-cols-[1fr_2fr]">
-          <TarjetaCaracteristicaIA
+          <UiTarjetaCaracteristicaIA
             v-for="tarjeta in tarjetasInferiores"
             :key="tarjeta.id"
             :tarjeta="tarjeta"
@@ -144,6 +172,7 @@ const tarjetaTabletAncha = tarjetas[4]
           />
         </div>
       </div>
+
     </div>
   </section>
 </template>
