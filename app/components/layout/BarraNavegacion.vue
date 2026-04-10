@@ -7,111 +7,18 @@ const menuAbierto = ref(false)
 const menuActivo = ref(null)
 const submenuMovilActivo = ref(null)
 
-/* datos del navbar
-en vez de escribir los links uno por uno en el template,
-se guardan aquí como datos en arrays y luego se pintan con v-for 
-
-datos del navbar*/
-const enlacesNavegacion = [
+// datos del navbar
+/* en vez de escribir los links uno por uno en el template, se guardan aquí como datos en arrays y luego se pintan con v-for 
+además ahora hay una sola fuente para escritorio y móvil.
+cada item decide si es link, dropdown o idioma y si tiene desplegable, también guarda aquí sus bloques internos */
+const enlacesNavbar = [
   {
     id: 1,
     texto: 'Pantallas Interactivas',
     href: '#',
     tipo: 'dropdown',
-    clave: 'pantallas'
-  },
-  {
-    id: 2,
-    texto: 'Pantallas LED',
-    href: '#',
-    tipo: 'link'
-  },
-  {
-    id: 3,
-    texto: 'Soporte',
-    href: '#',
-    tipo: 'dropdown',
-    clave: 'soporte'
-  },
-  {
-    id: 4,
-    texto: 'EdBlog',
-    href: '#',
-    tipo: 'link'
-  },
-  {
-    id: 5,
-    texto: 'Solicita una Demo',
-    href: '#',
-    tipo: 'link'
-  },
-  {
-    id: 6,
-    texto: 'Idioma',
-    tipo: 'idioma',
-    clave: 'idioma'
-  }
-]
-
-// cada dropdown tiene sus bloques y sus links dentro de arrays
-
-const dropdownsEscritorio = {
-  pantallas: {
     clave: 'pantallas',
     maxWidth: 'max-w-[860px]',
-    columnas: [
-      {
-        titulo: 'Pantallas Interactivas',
-        links: ['Piscis', 'Taurus', 'Gemini']
-      },
-      {
-        titulo: 'Software Educativo',
-        links: ['Synetech Class', 'Synetech OS', 'Synetech DMS', 'Synetech Share']
-      },
-      {
-        titulo: 'Inteligencia Artificial',
-        links: ['Synetech IA']
-      }
-    ]
-  },
-  soporte: {
-    clave: 'soporte',
-    maxWidth: 'max-w-[860px]',
-    columnas: [
-      {
-        titulo: 'Descargas',
-        links: ['Pantallas Interactivas']
-      },
-      {
-        titulo: 'Te ayudamos',
-        links: ['Contacta con soporte', 'Reparación de pantallas LED']
-      },
-      {
-        titulo: 'Información Adicional',
-        links: ['Garantía', 'Comprueba la cobertura']
-      }
-    ]
-  },
-  idioma: {
-    clave: 'idioma',
-    maxWidth: 'max-w-[280px]',
-    columnas: [
-      {
-        titulo: 'Elige tu idioma',
-        links: ['Español', 'English', 'Deutsch']
-      }
-    ]
-  }
-}
-
-/* datos del menú móvil / tablet pequeña
-mismo enfoque: datos primero, template después*/
-const enlacesMovil = [
-  {
-    id: 1,
-    texto: 'Pantallas Interactivas',
-    tipo: 'dropdown',
-    clave: 'pantallas',
     bloques: [
       {
         titulo: 'Pantallas Interactivas',
@@ -139,8 +46,10 @@ const enlacesMovil = [
   {
     id: 3,
     texto: 'Soporte',
+    href: '#',
     tipo: 'dropdown',
     clave: 'soporte',
+    maxWidth: 'max-w-[860px]',
     bloques: [
       {
         titulo: 'Descargas',
@@ -176,9 +85,10 @@ const enlacesMovil = [
     texto: 'Idioma',
     tipo: 'idioma',
     clave: 'idioma',
+    maxWidth: 'max-w-[280px]',
     bloques: [
       {
-        titulo: '',
+        titulo: 'Elige tu idioma',
         estilo: 'normal',
         links: ['Español', 'English', 'Deutsch']
       }
@@ -187,10 +97,14 @@ const enlacesMovil = [
 ]
 
 // computed
-//sirve para no tener 3 bloques duplicados en escritorio.
-// según el menú activo se saca la info del dropdown correspondiente
+/* aquí saco el dropdown activo de escritorio a partir del mismo array.
+así ya no necesito otro objeto separado solo para escritorio. */
 const dropdownActivoEscritorio = computed(() => {
-  return menuActivo.value ? dropdownsEscritorio[menuActivo.value] : null
+  if (!menuActivo.value) {
+    return null
+  }
+
+  return enlacesNavbar.find((enlace) => enlace.clave === menuActivo.value) ?? null
 })
 
 // funciones de control
@@ -254,12 +168,11 @@ onBeforeUnmount(() => {
         >
       </a>
 
-      <!-- escritorio / tablet grande
-    aquí ya no escribimos los items a mano 
-      ahora salen del array enlacesNavegacion -->
+      <!-- escritorio / tablet grande -->
+      <!-- aquí todo sale del mismo array -->
       <ul class="hidden items-center gap-7 text-sm font-medium text-white/90 lg:flex xl:gap-8">
         <li
-          v-for="enlace in enlacesNavegacion"
+          v-for="enlace in enlacesNavbar"
           :key="enlace.id"
           class="relative"
           @mouseenter="enlace.clave ? abrirDropdown(enlace.clave) : null"
@@ -327,8 +240,6 @@ onBeforeUnmount(() => {
     </nav>
 
     <!-- dropdown escritorio genérico -->
-    <!-- en vez de tener 3 bloques separados, usamos uno solo -->
-    <!-- y lo alimentamos con dropdownActivoEscritorio -->
     <div
       v-if="dropdownActivoEscritorio"
       class="hidden bg-[#2D2D2D] lg:block"
@@ -338,22 +249,25 @@ onBeforeUnmount(() => {
         <div
           :class="[
             dropdownActivoEscritorio.maxWidth,
-            dropdownActivoEscritorio.columnas.length > 1
+            dropdownActivoEscritorio.bloques.length > 1
               ? 'grid grid-cols-3 gap-x-14 xl:gap-x-16'
               : ''
           ]"
         >
           <div
-            v-for="columna in dropdownActivoEscritorio.columnas"
-            :key="columna.titulo"
+            v-for="bloque in dropdownActivoEscritorio.bloques"
+            :key="bloque.titulo || bloque.links[0]"
           >
-            <p class="text-[1rem] font-normal text-white/55">
-              {{ columna.titulo }}
+            <p
+              v-if="bloque.titulo"
+              class="text-[1rem] font-normal text-white/55"
+            >
+              {{ bloque.titulo }}
             </p>
 
             <ul class="mt-9 space-y-4 text-[1rem] font-normal text-white">
               <li
-                v-for="link in columna.links"
+                v-for="link in bloque.links"
                 :key="link"
               >
                 <a
@@ -394,36 +308,36 @@ onBeforeUnmount(() => {
             </div>
 
             <div class="relative z-10 h-full overflow-y-auto px-6 pb-10 pt-10 md:px-8 md:pt-12">
-              <!-- aquí también pintamos todo desde un array -->
+              <!-- aquí también pintamos todo desde el mismo array -->
               <ul class="flex flex-col gap-7 md:gap-8">
                 <li
-                  v-for="enlace in enlacesMovil"
+                  v-for="enlace in enlacesNavbar"
                   :key="enlace.id"
                 >
                   <!-- link normal -->
                   <a
                     v-if="enlace.tipo === 'link'"
                     :href="enlace.href"
-                    class="grupo-linea block"
+                    class="block"
                     @click="cerrarMenu"
                   >
                     <span class="block text-[18px] font-semibold tracking-[-0.02em] text-white md:text-[19px]">
                       {{ enlace.texto }}
                     </span>
-                    <span class="linea-seccion"></span>
+                    <span class="mt-[18px] block h-px w-full bg-white/60"></span>
                   </a>
 
                   <!-- dropdown móvil normal -->
                   <template v-else-if="enlace.tipo === 'dropdown'">
                     <button
                       type="button"
-                      class="grupo-linea w-full text-left"
+                      class="block w-full text-left"
                       @click="alternarSubmenuMovil(enlace.clave)"
                     >
                       <span class="block text-[18px] font-semibold tracking-[-0.02em] text-white md:text-[19px]">
                         {{ enlace.texto }}
                       </span>
-                      <span class="linea-seccion"></span>
+                      <span class="mt-[18px] block h-px w-full bg-white/60"></span>
                     </button>
 
                     <Transition
@@ -447,19 +361,22 @@ onBeforeUnmount(() => {
                           leave-from-class="translate-x-0 opacity-100"
                           leave-to-class="-translate-x-6 opacity-0"
                         >
-                          <div class="submenu-contenido">
+                          <div class="px-0 py-[2px]">
                             <div class="space-y-9">
                               <div
                                 v-for="bloque in enlace.bloques"
-                                :key="bloque.titulo"
+                                :key="bloque.titulo || bloque.links[0]"
                               >
-                                <p class="submenu-titulo">
+                                <p
+                                  v-if="bloque.titulo"
+                                  class="mb-2 text-[13px] font-bold leading-[1.2] text-white/60 md:mb-[10px] md:text-[14px]"
+                                >
                                   {{ bloque.titulo }}
                                 </p>
 
                                 <ul
-                                  class="submenu-lista"
-                                  :class="bloque.estilo === 'normal' ? 'submenu-lista--normal' : ''"
+                                  class="flex flex-col"
+                                  :class="bloque.estilo === 'normal' ? 'gap-2' : 'gap-1'"
                                 >
                                   <li
                                     v-for="link in bloque.links"
@@ -467,8 +384,10 @@ onBeforeUnmount(() => {
                                   >
                                     <a
                                       href="#"
-                                      class="submenu-enlace"
-                                      :class="bloque.estilo === 'normal' ? 'submenu-enlace--normal' : ''"
+                                      class="inline-block border-b border-transparent text-white transition duration-200 hover:border-white"
+                                      :class="bloque.estilo === 'normal'
+                                        ? 'text-[17px] font-medium leading-[1.4] md:text-[18px]'
+                                        : 'text-[18px] font-bold leading-[1.35] md:text-[19px]'"
                                       @click="cerrarMenu"
                                     >
                                       {{ link }}
@@ -487,7 +406,7 @@ onBeforeUnmount(() => {
                   <template v-else>
                     <button
                       type="button"
-                      class="grupo-linea w-full text-left"
+                      class="block w-full text-left"
                       @click="alternarSubmenuMovil(enlace.clave)"
                     >
                       <span class="block text-white">
@@ -507,7 +426,7 @@ onBeforeUnmount(() => {
                           <path d="M12 3a15 15 0 0 0 0 18" />
                         </svg>
                       </span>
-                      <span class="linea-seccion"></span>
+                      <span class="mt-[18px] block h-px w-full bg-white/60"></span>
                     </button>
 
                     <Transition
@@ -531,15 +450,15 @@ onBeforeUnmount(() => {
                           leave-from-class="translate-x-0 opacity-100"
                           leave-to-class="-translate-x-6 opacity-0"
                         >
-                          <div class="submenu-contenido submenu-contenido--idioma">
-                            <ul class="submenu-lista submenu-lista--normal">
+                          <div class="px-0 py-[2px]">
+                            <ul class="flex flex-col gap-2">
                               <li
                                 v-for="link in enlace.bloques[0].links"
                                 :key="link"
                               >
                                 <a
                                   href="#"
-                                  class="submenu-enlace submenu-enlace--normal"
+                                  class="inline-block border-b border-transparent text-[17px] font-medium leading-[1.4] text-white transition duration-200 hover:border-white md:text-[18px]"
                                   @click="cerrarMenu"
                                 >
                                   {{ link }}
@@ -560,87 +479,3 @@ onBeforeUnmount(() => {
     </Transition>
   </Teleport>
 </template>
-
-<style scoped>
-/* helpers del menú móvil */
-.grupo-linea {
-  display: block;
-}
-
-.linea-seccion {
-  display: block;
-  height: 1px;
-  margin-top: 18px;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.62);
-}
-
-/* estilos del contenido desplegable móvil */
-.submenu-contenido {
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: 2px;
-  padding-bottom: 2px;
-}
-
-.submenu-contenido--idioma {
-  max-width: none;
-}
-
-.submenu-titulo {
-  margin-bottom: 8px;
-  color: rgba(255, 255, 255, 0.58);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.submenu-lista {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.submenu-lista--normal {
-  gap: 8px;
-}
-
-.submenu-enlace {
-  display: inline-block;
-  color: white;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.35;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.2s ease;
-}
-
-.submenu-enlace--normal {
-  font-size: 17px;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-.submenu-enlace:hover {
-  border-bottom-color: white;
-}
-
-@media (min-width: 768px) {
-  .linea-seccion {
-    width: 100%;
-  }
-
-  .submenu-titulo {
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-
-  .submenu-enlace {
-    font-size: 19px;
-  }
-
-  .submenu-enlace--normal {
-    font-size: 18px;
-  }
-}
-</style>
