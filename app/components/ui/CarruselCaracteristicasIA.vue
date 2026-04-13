@@ -1,58 +1,56 @@
-<script setup>
+<script setup lang="ts">
 // script setup
 // Esta componente hija se queda con todo lo que pertenece al carrusel.
 // Así no mezclo la lógica de Swiper con el layout general de la sección padre.
 
-/*IMPORTANTE SOBRE IMPORTS: ------------------
-En nuxt las utilidades de Vue no necesitan importarse pq ya se hacen automaticamente, como con:
-ref, computed, watch, nextTick, onMounted, onBeforeUnmount, defineProps -----------------------*/ 
+/* En Nuxt muchas utilidades de Vue se autoimportan,
+por eso no hace falta importarlas manualmente aquí. */
 
+import type { TarjetaIA } from '~/types/tarjetas'
+import type { Swiper as SwiperInstance } from 'swiper'
 
 // Esta es la tarjeta reusable.
 // El carrusel no pinta la tarjeta directamente: la delega a otra hija.
-//ESTE IMPORT SI ES NECESARIO PQ ES UN COMPONENTE
 import TarjetaCaracteristicaIA from './TarjetaCaracteristicaIA.vue'
 
-// Estos vienen de Swiper. TMB ES NECESARIO IMPORTARLOS PQ NO SON DE VUE
+// Estos vienen de Swiper.
 // Vue pinta la estructura, pero Swiper pone el comportamiento real de slider.
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, A11y } from 'swiper/modules'
-import 'swiper/css'
 
 // props
 // El array viene desde el padre.
 // Aquí no hardcodeo tarjetas: esta componente trabaja con lo que recibe.
-const props = defineProps({
-  tarjetas: {
-    type: Array,
-    required: true
-  },
-  rutaFlecha: {
-    type: String,
-    default: ''
-  }
+interface Props {
+  tarjetas: TarjetaIA[]
+  rutaFlecha?: string
+}
 
+const props = withDefaults(defineProps<Props>(), {
+  rutaFlecha: ''
 })
 
 // estado del swiper
 // Guardo la instancia para poder controlarla luego.
 // También guardo el índice activo y el estado del autoplay para los controles inferiores.
-const swiperCaracteristicas = ref(null)
+const swiperCaracteristicas = ref<SwiperInstance | null>(null)
 const indiceActivo = ref(0)
 const autoplayActivo = ref(true)
-/* 
-módulos de swiper
+
+/* módulos de swiper
 Swiper funciona por módulos.
 Aquí activo solo lo que necesito en este carrusel. */
 const modulosSwiper = [Autoplay, A11y]
 
 // total de tarjetas
-// Lo saco con computed para que quede claro que depende de las props.
-const totalTarjetas = computed(() => props.tarjetas.length)
+// computed crea un valor derivado reactivo.
+// aquí devuelve siempre el total actual de tarjetas recibidas por props.
+const totalTarjetas = computed<number>(() => props.tarjetas.length)//tmb se tipan las tarjetas
 
-// ciclo de vida del swiper
-// Cuando Swiper se monta, guardo su instancia para poder controlarla más tarde.
-function guardarSwiper(swiper) {
+/* ciclo de vida del swiper
+Cuando Swiper se monta, guardo su instancia para poder controlarla más tarde. 
+TAMBIÉN SE TIPAN LAS FUNCIONES*/
+function guardarSwiper(swiper: SwiperInstance) {
   swiperCaracteristicas.value = swiper
   indiceActivo.value = swiper.realIndex ?? 0
 
@@ -63,7 +61,7 @@ function guardarSwiper(swiper) {
 
 // índice activo
 // Cada vez que cambia de slide, actualizo el índice del indicador inferior.
-function cambiarIndice(swiper) {
+function cambiarIndice(swiper: SwiperInstance) {
   indiceActivo.value = swiper.realIndex ?? 0
 }
 
@@ -102,7 +100,7 @@ function alternarAutoplay() {
 
 // navegación manual
 // Esto lo usa la fila de indicadores para saltar a una tarjeta concreta.
-function irATarjeta(indice) {
+function irATarjeta(indice: number) {//SE TIPA EL INDICE
   if (!swiperCaracteristicas.value) {
     return
   }
@@ -191,14 +189,14 @@ onBeforeUnmount(() => {
       @touchStart="alArrastrarSwiper"
     >
       <SwiperSlide
-        v-for="tarjeta in tarjetas"
+        v-for="tarjeta in props.tarjetas"
         :key="tarjeta.id"
         class="pb-2"
       >
         <TarjetaCaracteristicaIA
           :tarjeta="tarjeta"
           vista="movil"
-          :ruta-flecha="rutaFlecha"
+          :ruta-flecha="props.rutaFlecha"
         />
       </SwiperSlide>
     </Swiper>
@@ -255,10 +253,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* estilos del carrusel */
-/* Todo lo que depende visualmente del swiper móvil se queda aquí,
-   así el padre no se llena de CSS que no necesita conocer.
-Este css si es importante de dejar pq afecta a clases de swiper  */
+/* Este CSS sí conviene dejarlo porque afecta a clases internas de Swiper. */
 :deep(.swiper-wrapper) {
   align-items: stretch;
 }
