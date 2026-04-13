@@ -19,7 +19,7 @@ interface Props {
   tarjeta: TarjetaIA
   vista?: TarjetaVista
   formato?: TarjetaFormato
-  rutaFlecha?: string | null
+  rutaFlecha?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {//withDefaults ya se sabe que dentro del componete siempre habrá un valor usable

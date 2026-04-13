@@ -23,16 +23,16 @@ así que se cambió el código para que este tmb acepte datos dinamicos con prop
 sin duplicar codigo ------------------> IMPORTANTE*/
 
 
-interface Props { //----------> define la FORMA DE LOS PROPS que este componente puede RECIBIR
+interface Props { //----------> props que debe recibir este componente
   titulo?: string
-  tarjetas?: TarjetaIA[]
+  tarjetas?: TarjetaIA[]//tarjetas esta tipado para solo recibir TarjetaIA[]
   rutaFlechas?: string //opcional
 }
 
 /* Se definen propiedades externas para permitir la reutilización de la sección.
 Si se reciben datos desde fuera (por ejemplo desde otra página), estos tendrán prioridad.
-En caso contrario, se utilizarán valores por defecto definidos en este componente. */
-const props = withDefaults(defineProps<Props>(), {
+Los props de arriba serán los ideales pero estan marcados como opcionales por si no se les pasa nada, en ese caso se usan estos props */
+const props = withDefaults(defineProps<Props>(), {//---> withDefaults para dejarle valores por defecto por si no se le pasa nada
   titulo: 'La pantalla interactiva con IA que está revolucionando la educación en los colegios',
   tarjetas: () => [],
   rutaFlechas: ''
@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
 /* datos por defecto
 Este array actúa como fallback en caso de que no se pasen tarjetas desde el exterior.
 Permite que el componente siga funcionando de forma autónoma (por ejemplo en la home). */
-const tarjetasDefault: TarjetaIA[] = [
+const tarjetasDefault: TarjetaIA[] = [//----------> Tmb se tipan los datos por defecto que se le pasen
   {
     id: 1,
     tipo: 'imagen-fondo',
@@ -96,8 +96,12 @@ const tarjetas = computed<TarjetaIA[]>(() => {//computed ref para recalcular aut
   return props.tarjetas.length ? props.tarjetas : tarjetasDefault//USAR PROPS, antes era const tarjetas = tarjetasProp.length ? tarjetasProp : tarjetasDefault
 })
 
-const tarjetasSuperiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(0, 3))
-const tarjetasInferiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(3))
+//estos slices dividen mi lista de tarjetas en 2 grupos -----------> COMPUTED
+/*usamos computed por si el nuemero de tarjetas cambia, en ese caso las posiciones se actualizarian solas sin tener q recargar la pagina y sin importar cuantas le de
+basicamente se ordenan solas sin importar el numero de tarjetas que le pase*/
+const tarjetasSuperiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(0, 3))//toma las 3 primeras
+const tarjetasInferiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(3))//toma las que sobren a partir de la posicion 3
+
 const tarjetasTabletSuperiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(0, 4))
 
 const tarjetaFallbackAncha = tarjetasDefault.find((tarjeta) => tarjeta.ancha) ?? tarjetasDefault[0]!//aqui primero busca una tarjeta marcada como ancha y si no llega desde props se sa una del fallback por defecto
