@@ -1,9 +1,12 @@
-<script setup>
-// Datos nuevos para demostrar reutilización
-const tarjetasPrueba = [
+<script setup lang="ts">
+import type { TarjetaIA } from '@/types/tarjetas'//nombre del tipo: TarjetaIA
+
+const tarjetasPrueba: TarjetaIA[] = [//tarjetasPrueba es un array de objetos del tipo TarjetaIA
+//cuando ya está tipado TS verifi a que cada objeto tenga los elementos del tipo, por ejemplo, id siembre será number
+/*Antes se veia asi: 'const tarjetasPrueba = ['*/
   {
     id: 3,
-    tipo: 'imagen-fondo',
+    tipo: 'imagen-fondo', //marca error si ponemos un valor que no sea del tipo que especifiquemos
     titulo: 'Descubre recursos',
     subtitulo: 'para cada clase',
     imagen: '/imagenes/subtitulos-automaticos-ia-1024w.webp',
