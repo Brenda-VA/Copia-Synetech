@@ -1,8 +1,7 @@
-<script setup>
-// script setup
-// Aquí dejo la sección padre.
-// La idea es que este archivo coordine la sección completa, pero no se coma toda la lógica.
-// Así queda más fácil de leer y también más fácil de escalar si luego añadimos más variantes.
+<script setup lang="ts">//activa TS dentro, sin el, el archivo seguiria funcionando como JS
+/* script setup: sección padre.
+este archivo coordina la sección completa sin comerse toda la lógica.
+Así queda más fácil de leer y también más fácil de escalar si luego añadimos más variantes. */
 
 // imports
 /* Import de ejemplo, no sirve pq ya le hice el autoimport en las etiquetas:
@@ -14,7 +13,8 @@ La tarjeta reusable es otra hija.
 Esta la uso en tablet grande y desktop para no repetir el HTML de cada tarjeta.
 import TarjetaCaracteristicaIA from '../ui/UiTarjetaCaracteristicaIA.vue' */
 
-
+/* USAR TIPOS E IMPORTARLOS: */
+import type { TarjetaIA } from '~/types/tarjetas';
 
 // props
 /*NUEVO CAMBIO:
@@ -23,29 +23,25 @@ así que se cambió el código para que este tmb acepte datos dinamicos con prop
 sin duplicar codigo ------------------> IMPORTANTE*/
 
 
+interface Props { //----------> define la FORMA DE LOS PROPS que este componente puede RECIBIR
+  titulo?: string
+  tarjetas?: TarjetaIA[]
+  rutaFlechas?: string //opcional
+}
 
 /* Se definen propiedades externas para permitir la reutilización de la sección.
 Si se reciben datos desde fuera (por ejemplo desde otra página), estos tendrán prioridad.
 En caso contrario, se utilizarán valores por defecto definidos en este componente. */
-const { titulo, tarjetas: tarjetasProp } = defineProps({
-  titulo: {
-    type: String,
-    default: 'La pantalla interactiva con IA que está revolucionando la educación en los colegios'
-  },
-  tarjetas: {
-    type: Array,
-    default: () => []
-  },
-  rutaFlechas: {
-    type: String,
-    default: ''
-  }
+const props = withDefaults(defineProps<Props>(), {
+  titulo: 'La pantalla interactiva con IA que está revolucionando la educación en los colegios',
+  tarjetas: () => [],
+  rutaFlechas: ''
 })
 
-// datos por defecto
-// Este array actúa como fallback en caso de que no se pasen tarjetas desde el exterior.
-// Permite que el componente siga funcionando de forma autónoma (por ejemplo en la home).
-const tarjetasDefault = [
+/* datos por defecto
+Este array actúa como fallback en caso de que no se pasen tarjetas desde el exterior.
+Permite que el componente siga funcionando de forma autónoma (por ejemplo en la home). */
+const tarjetasDefault: TarjetaIA[] = [
   {
     id: 1,
     tipo: 'imagen-fondo',
@@ -90,21 +86,27 @@ const tarjetasDefault = [
   }
 ]
 
-// selección de datos
-// Se priorizan las tarjetas recibidas por props.
-// Si no existen o están vacías, se utilizan las tarjetas por defecto.
-// Esto hace que el componente sea reutilizable sin romper su funcionamiento original.
-const tarjetas = tarjetasProp.length ? tarjetasProp : tarjetasDefault
+/* selección de datos
+Se priorizan las tarjetas recibidas por props.
+Si no existen o están vacías, se utilizan las tarjetas por defecto.
+Esto hace que el componente sea reutilizable sin romper su funcionamiento original. */
 
-// slices
-// Se generan subconjuntos del array principal para adaptar el layout según el breakpoint.
-// De esta forma se evita duplicar datos y se mantiene una única fuente de verdad.
-const tarjetasSuperiores = tarjetas.slice(0, 3)
-const tarjetasInferiores = tarjetas.slice(3)
-const tarjetasTabletSuperiores = tarjetas.slice(0, 4)
-const tarjetaTabletAncha = tarjetas[4]
+
+const tarjetas = computed<TarjetaIA[]>(() => {//computed ref para recalcular automaticamente que tarjetas usar, ahora se accede con .value
+  return props.tarjetas.length ? props.tarjetas : tarjetasDefault//USAR PROPS, antes era const tarjetas = tarjetasProp.length ? tarjetasProp : tarjetasDefault
+})
+
+const tarjetasSuperiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(0, 3))
+const tarjetasInferiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(3))
+const tarjetasTabletSuperiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(0, 4))
+
+const tarjetaFallbackAncha = tarjetasDefault.find((tarjeta) => tarjeta.ancha) ?? tarjetasDefault[0]!//aqui primero busca una tarjeta marcada como ancha y si no llega desde props se sa una del fallback por defecto
+const tarjetaTabletAncha = computed<TarjetaIA>(() => {
+  return tarjetas.value.find((tarjeta) => tarjeta.ancha) ?? tarjetaFallbackAncha
+})
+
+
 </script>
-
 <template>
   <!-- sección padre -->
   <!-- Este contenedor define la estructura general de la sección.
@@ -118,7 +120,7 @@ const tarjetaTabletAncha = tarjetas[4]
       <h2
         class="max-w-[1320px] text-[2.2rem] font-semibold leading-[1.15] tracking-tight text-black md:text-[3.2rem] xl:text-[3.75rem]"
       >
-        {{ titulo }}
+        {{ props.titulo }}
       </h2>
 
       <!-- móvil + tablet pequeña -->
@@ -127,7 +129,7 @@ const tarjetaTabletAncha = tarjetas[4]
       <UiCarruselCaracteristicasIA
         class="mt-8 lg:hidden"
         :tarjetas="tarjetas"
-        :ruta-flecha="rutaFlechas"
+        :ruta-flecha="props.rutaFlechas"
       />
 
       <!-- tablet grande -->
@@ -143,7 +145,7 @@ const tarjetaTabletAncha = tarjetas[4]
             :key="tarjeta.id"
             :tarjeta="tarjeta"
             vista="tablet"
-            :ruta-flecha="rutaFlechas"
+            :ruta-flecha="props.rutaFlechas"
           />
         </div>
 
@@ -152,7 +154,7 @@ const tarjetaTabletAncha = tarjetas[4]
             :tarjeta="tarjetaTabletAncha"
             vista="tablet"
             formato="ancha"
-            :ruta-flecha="rutaFlechas"
+            :ruta-flecha="props.rutaFlechas"
           />
         </div>
       </div>
@@ -167,7 +169,7 @@ const tarjetaTabletAncha = tarjetas[4]
             :key="tarjeta.id"
             :tarjeta="tarjeta"
             vista="desktop"
-            :ruta-flecha="rutaFlechas"
+            :ruta-flecha="props.rutaFlechas"
           />
         </div>
 
@@ -177,7 +179,7 @@ const tarjetaTabletAncha = tarjetas[4]
             :key="tarjeta.id"
             :tarjeta="tarjeta"
             vista="desktop"
-            :ruta-flecha="rutaFlechas"
+            :ruta-flecha="props.rutaFlechas"
           />
         </div>
       </div>
