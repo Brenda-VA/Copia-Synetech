@@ -1,0 +1,80 @@
+{
+  "caracteristicasIA": {
+    "heading": "La pantalla interactiva con IA que está revolucionando la educación en los colegios",
+    "acciones": {
+      "abrirTarjeta": "Abrir {titulo}"
+    },
+    "carrusel": {
+      "pausar": "Pausar carrusel",
+      "reproducir": "Reproducir carrusel",
+      "indicadores": "Indicadores de tarjetas de características IA",
+      "irATarjeta": "Ir a la tarjeta {numero}"
+    },
+    "modal": {
+      "cerrar": "Cerrar modal"
+    },
+    "tarjetas": {
+      "preguntale": {
+        "titulo": "Pregúntale",
+        "subtitulo": "a la IA",
+        "alt": "Profesor usando asistente de IA en pantalla interactiva",
+        "modal": {
+          "titulo": "Formaciones para colegios",
+          "descripcion": "Ofrecemos formaciones para centros educativos sobre el uso de pantallas interactivas, herramientas digitales e inteligencia artificial en el aula."
+        }
+      },
+      "artista": {
+        "titulo": "Conviértete en un artista",
+        "subtitulo": "con IA generativa",
+        "alt": "Pantalla interactiva con dibujo generado por IA"
+      },
+      "subtitulos": {
+        "titulo": "Subtitula tus vídeos",
+        "subtitulo": "automáticamente",
+        "alt": "Clase viendo subtítulos automáticos en pantalla"
+      },
+      "traduccion": {
+        "titulo": "Traduce audio en tiempo real:",
+        "subtitulo": "rompe barreras de idioma al instante",
+        "alt": "Pantalla mostrando traducción automática en tiempo real"
+      },
+      "perfiles": {
+        "titulo": "Invitado, Usuario, Administrador.",
+        "subtitulo": "Gestiona los perfiles de forma sencilla y segura",
+        "alt": "Pantalla con gestión de perfiles de usuario"
+      }
+    }
+  },
+  "prueba": {
+    "caracteristicasIA": {
+      "heading": "Recursos digitales para una clase más dinámica",
+      "tarjetas": {
+        "recursos": {
+          "titulo": "Descubre recursos",
+          "subtitulo": "para cada clase",
+          "alt": "Recursos para clase"
+        },
+        "ideas": {
+          "titulo": "Explora ideas nuevas",
+          "subtitulo": "con apoyo visual",
+          "alt": "Explorar ideas nuevas"
+        },
+        "accesos": {
+          "titulo": "Organiza accesos",
+          "subtitulo": "de forma clara y segura",
+          "alt": "Organización de accesos"
+        },
+        "actividades": {
+          "titulo": "Crea actividades",
+          "subtitulo": "más creativas e interactivas",
+          "alt": "Actividades creativas"
+        },
+        "conexion": {
+          "titulo": "Conecta a todos",
+          "subtitulo": "sin barreras de idioma",
+          "alt": "Conexión sin barreras"
+        }
+      }
+    }
+  }
+}
