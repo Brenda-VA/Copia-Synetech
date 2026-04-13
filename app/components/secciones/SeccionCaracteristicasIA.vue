@@ -14,7 +14,7 @@ Esta la uso en tablet grande y desktop para no repetir el HTML de cada tarjeta.
 import TarjetaCaracteristicaIA from '../ui/UiTarjetaCaracteristicaIA.vue' */
 
 /* USAR TIPOS E IMPORTARLOS: */
-import type { TarjetaIA } from '~/types/tarjetas';
+import type { TarjetaIA, TarjetaModalIA } from '~/types/tarjetas';//tmb se importa el modal para usarlo en las tarejtas q lo necesiten
 
 // props
 /*NUEVO CAMBIO:
@@ -48,7 +48,11 @@ const tarjetasDefault: TarjetaIA[] = [//----------> Tmb se tipan los datos por d
     titulo: 'Pregúntale',
     subtitulo: 'a la IA',
     imagen: '/imagenes/asistente-ia-1024w.webp',
-    alt: 'Profesor usando asistente de IA en pantalla interactiva'
+    alt: 'Profesor usando asistente de IA en pantalla interactiva',
+    modal: {// Tarjeta con modal, se le añade la nueva propiedad
+      titulo: 'Formaciones para colegios',
+      descripcion: 'Ofrecemos formaciones para centros educativos sobre el uso de pantallas interactivas, herramientas digitales e inteligencia artificial en el aula.'
+    }
   },
   {
     id: 2,
@@ -57,6 +61,7 @@ const tarjetasDefault: TarjetaIA[] = [//----------> Tmb se tipan los datos por d
     subtitulo: 'con IA generativa',
     imagen: '/imagenes/ia-generativa-1512w.webp',
     alt: 'Pantalla interactiva con dibujo generado por IA'
+    
   },
   {
     id: 3,
@@ -108,6 +113,19 @@ const tarjetaFallbackAncha = tarjetasDefault.find((tarjeta) => tarjeta.ancha) ??
 const tarjetaTabletAncha = computed<TarjetaIA>(() => {
   return tarjetas.value.find((tarjeta) => tarjeta.ancha) ?? tarjetaFallbackAncha
 })
+//MODAL ----------
+const modalAbierto = ref(false)
+const modalActivo = ref<TarjetaModalIA | null>(null)
+
+function abrirModal(modal: TarjetaModalIA) {
+  modalActivo.value = modal
+  modalAbierto.value = true
+}
+
+function cerrarModal() {
+  modalAbierto.value = false
+  modalActivo.value = null
+}//-------------
 
 
 </script>
@@ -134,6 +152,7 @@ const tarjetaTabletAncha = computed<TarjetaIA>(() => {
         class="mt-8 lg:hidden"
         :tarjetas="tarjetas"
         :ruta-flecha="props.rutaFlechas"
+        @abrir-modal="abrirModal"
       />
 
       <!-- tablet grande -->
@@ -150,6 +169,7 @@ const tarjetaTabletAncha = computed<TarjetaIA>(() => {
             :tarjeta="tarjeta"
             vista="tablet"
             :ruta-flecha="props.rutaFlechas"
+            @abrir-modal="abrirModal"
           />
         </div>
 
@@ -159,6 +179,7 @@ const tarjetaTabletAncha = computed<TarjetaIA>(() => {
             vista="tablet"
             formato="ancha"
             :ruta-flecha="props.rutaFlechas"
+            @abrir-modal="abrirModal"
           />
         </div>
       </div>
@@ -174,6 +195,7 @@ const tarjetaTabletAncha = computed<TarjetaIA>(() => {
             :tarjeta="tarjeta"
             vista="desktop"
             :ruta-flecha="props.rutaFlechas"
+            @abrir-modal="abrirModal"
           />
         </div>
 
@@ -184,10 +206,58 @@ const tarjetaTabletAncha = computed<TarjetaIA>(() => {
             :tarjeta="tarjeta"
             vista="desktop"
             :ruta-flecha="props.rutaFlechas"
+            @abrir-modal="abrirModal"
           />
         </div>
       </div>
 
     </div>
   </section>
+
+
+  <!-- Teleport to="body": Hace que el modal se pinte directamente dentro del body, no encerrado en la secion -->
+<Teleport to="body">
+  <!-- v-if="modalAbierto && modalActivo": Solo se muestra si:  - está abierto
+                                                                - hay contenido real 
+        @click="cerrarModal": Si haces click en el fondo oscuro, se cierra.                                                                
+        @click.stop: Si haces click dentro de la caja blanca, no se cierra.-->
+  <div
+    v-if="modalAbierto && modalActivo"
+    class="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 px-4"
+    @click="cerrarModal"
+  >
+    <div
+      class="w-full max-w-[560px] rounded-[2rem] bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.22)] md:p-8"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-modal-ia"
+      @click.stop
+    >
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3
+            id="titulo-modal-ia"
+            class="text-[1.4rem] font-semibold leading-tight text-black md:text-[1.7rem]"
+          >
+            {{ modalActivo.titulo }}
+          </h3>
+
+          <p class="mt-4 text-[1rem] leading-[1.6] text-black/75">
+            {{ modalActivo.descripcion }}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black text-white"
+          aria-label="Cerrar modal"
+          @click="cerrarModal"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+</Teleport>
+
 </template>

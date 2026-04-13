@@ -7,7 +7,7 @@
 // imports
 // Este botón ya existía en tu proyecto y lo reutilizo para no romper el estilo.
 import BotonCircular from './BotonCircular.vue'
-import type { TarjetaIA, TarjetaVista, TarjetaFormato } from '~/types/tarjetas'
+import type { TarjetaIA, TarjetaVista, TarjetaFormato, TarjetaModalIA} from '~/types/tarjetas'
 
 // props
 // Aquí recibo:
@@ -27,6 +27,17 @@ const props = withDefaults(defineProps<Props>(), {//withDefaults ya se sabe que 
   formato: 'estandar',
   rutaFlecha: ''
 })
+
+// MODAL
+const emit = defineEmits<{//esto indica que el componente puede emitir un evento llamado abrir-modal y que cuando lo haga, se enviará un objeto del tipo TarjetaModalIA
+  (e: 'abrir-modal', modal: TarjetaModalIA): void
+}>()
+
+function manejarAccionBoton() { //Si la tarjeta tiene el modal, se dispara el evento
+  if (props.tarjeta.modal) {
+    emit('abrir-modal', props.tarjeta.modal)
+  }
+}
 
 /* ayudas de lectura
 Estas constantes hacen el template más fácil de seguir.
@@ -101,9 +112,13 @@ const esAncha = computed(() => props.formato === 'ancha')
     </div>
 
     <div class="absolute bottom-5 right-5">
+      <!-- AÑADIR EL EVENTO A LOS BOTONES CIRCULARES EN TODAS LAS VISTAS
+      si la tiene modal, no navega y al hacerle click emite el evento
+           si no tiene modal, entonces usa la ruta normal y redirige a la otra pagina-->
       <BotonCircular
         :aria-label="`Abrir ${props.tarjeta.titulo}`"
-        :to="props.rutaFlecha"
+        :to="props.tarjeta.modal ? '' : props.rutaFlecha"
+        @click="props.tarjeta.modal ? manejarAccionBoton() : null"
       />
     </div>
   </article>
@@ -149,9 +164,11 @@ const esAncha = computed(() => props.formato === 'ancha')
       class="absolute z-10"
       :class="esTablet ? 'bottom-5 right-5' : 'bottom-5 right-5 md:bottom-6 md:right-6'"
     >
+    <!-- HACER POSIBLE EL EVENTO DEL MODAL -->
       <BotonCircular
         :aria-label="`Abrir ${props.tarjeta.titulo}`"
-        :to="props.rutaFlecha"
+        :to="props.tarjeta.modal ? '' : props.rutaFlecha"
+        @click="props.tarjeta.modal ? manejarAccionBoton() : null" 
       />
     </div>
   </article>
@@ -197,7 +214,8 @@ const esAncha = computed(() => props.formato === 'ancha')
     >
       <BotonCircular
         :aria-label="`Abrir ${props.tarjeta.titulo}`"
-        :to="props.rutaFlecha"
+        :to="props.tarjeta.modal ? '' : props.rutaFlecha"
+        @click="props.tarjeta.modal ? manejarAccionBoton() : null"
       />
     </div>
   </article>

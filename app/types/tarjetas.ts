@@ -10,4 +10,13 @@ export interface TarjetaIA {
   imagen: string
   alt: string
   ancha?: boolean //propiedad opcional, por eso tiene el '?', algunas tarjetas la tienen, otras no
+  modal?: TarjetaModalIA
 }
+//interface para las tarjeta que muestren un modal
+/* el boton de las tarjetas que tengan la propiedad modal ya no servirá para navegar, si no que emitirá un evento para abrir un modal en cuanto sea pulsado
+se debe usar tanto en seccion como en carrusel, en este ultimo caso, como carrusel contiene la tarjeta, tiene que escuchar ese evento y reenviarlo al padre */
+export interface TarjetaModalIA {
+  titulo: string
+  descripcion: string
+}
+

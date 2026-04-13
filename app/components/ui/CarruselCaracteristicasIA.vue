@@ -6,7 +6,7 @@
 /* En Nuxt muchas utilidades de Vue se autoimportan,
 por eso no hace falta importarlas manualmente aquí. */
 
-import type { TarjetaIA } from '~/types/tarjetas'
+import type { TarjetaIA, TarjetaModalIA } from '~/types/tarjetas'//se importa el tipo del modal
 import type { Swiper as SwiperInstance } from 'swiper'
 
 // Esta es la tarjeta reusable.
@@ -29,6 +29,11 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   rutaFlecha: ''
 })
+
+//Solo se pone un emit pq carrusel no abre el modal, si no que envia el evento al padre
+const emit = defineEmits<{
+  (e: 'abrir-modal', modal: TarjetaModalIA): void
+}>()
 
 // estado del swiper
 // Guardo la instancia para poder controlarla luego.
@@ -193,10 +198,12 @@ onBeforeUnmount(() => {
         :key="tarjeta.id"
         class="pb-2"
       >
+      <!-- su una tarjeta del carrusel emite abrir-modal, el carrusel lo envia la padre -->
         <TarjetaCaracteristicaIA
           :tarjeta="tarjeta"
           vista="movil"
           :ruta-flecha="props.rutaFlecha"
+          @abrir-modal="emit('abrir-modal', $event)"
         />
       </SwiperSlide>
     </Swiper>
