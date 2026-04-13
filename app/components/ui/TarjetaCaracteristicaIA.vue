@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // script setup
 // Esta componente hija solo se dedica a pintar una tarjeta.
 // No guarda el array completo, no sabe nada del swiper y no decide breakpoints globales.
@@ -7,39 +7,35 @@
 // imports
 // Este botón ya existía en tu proyecto y lo reutilizo para no romper el estilo.
 import BotonCircular from './BotonCircular.vue'
+import type { TarjetaIA, TarjetaVista, TarjetaFormato } from '~/types/tarjetas'
 
 // props
 // Aquí recibo:
 // - tarjeta: el objeto con los datos reales
 // - vista: me dice en qué contexto se está usando la tarjeta
 // - formato: me sirve para alguna variante concreta, como la tarjeta ancha de tablet
-const props = defineProps({
-  tarjeta: {
-    type: Object,
-    required: true
-  },
-  vista: {
-    type: String,
-    default: 'desktop'
-  },
-  formato: {
-    type: String,
-    default: 'estandar'
-  },
-  rutaFlecha: {
-    type: String,
-    default: ''
-  }
+
+interface Props {
+  tarjeta: TarjetaIA
+  vista?: TarjetaVista
+  formato?: TarjetaFormato
+  rutaFlecha?: string | null
+}
+
+const props = withDefaults(defineProps<Props>(), {//withDefaults ya se sabe que dentro del componete siempre habrá un valor usable
+  vista: 'desktop',
+  formato: 'estandar',
+  rutaFlecha: ''
 })
 
-// ayudas de lectura
-// Estas constantes hacen el template más fácil de seguir.
-// Así evito meter comparaciones largas una y otra vez en cada clase.
-const esMovil = props.vista === 'movil'
-const esTablet = props.vista === 'tablet'
-const esDesktop = props.vista === 'desktop'
-const esImagenFondo = props.tarjeta.tipo === 'imagen-fondo'
-const esAncha = props.formato === 'ancha'
+/* ayudas de lectura
+Estas constantes hacen el template más fácil de seguir.
+Así evito meter comparaciones largas una y otra vez en cada clase. */
+//COMPUTED para que se actualice solo si es que la vista cambia, q se recalcule automaticamente
+const esMovil = computed(() => props.vista === 'movil')
+const esTablet = computed(() => props.vista === 'tablet')
+const esImagenFondo = computed(() => props.tarjeta.tipo === 'imagen-fondo')
+const esAncha = computed(() => props.formato === 'ancha')
 </script>
 
 <template>
@@ -52,11 +48,11 @@ const esAncha = props.formato === 'ancha'
   >
     <div class="tarjeta-ia-movil__texto">
       <h3 class="tarjeta-ia-movil__titulo">
-        {{ tarjeta.titulo }}
+        {{ props.tarjeta.titulo }}
       </h3>
 
       <p class="tarjeta-ia-movil__subtitulo">
-        {{ tarjeta.subtitulo }}
+        {{ props.tarjeta.subtitulo }}
       </p>
     </div>
 
@@ -67,8 +63,8 @@ const esAncha = props.formato === 'ancha'
         : 'tarjeta-ia-movil__media--soft'"
     >
       <img
-        :src="tarjeta.imagen"
-        :alt="tarjeta.alt"
+        :src="props.tarjeta.imagen"
+        :alt="props.tarjeta.alt"
         class="tarjeta-ia-movil__imagen"
         :class="esImagenFondo
           ? 'tarjeta-ia-movil__imagen--cover'
@@ -87,25 +83,28 @@ const esAncha = props.formato === 'ancha'
     <div class="grid min-h-[320px] gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.45fr)]">
       <div class="pr-10">
         <h3 class="text-[1.05rem] font-bold leading-tight text-black">
-          {{ tarjeta.titulo }}
+          {{ props.tarjeta.titulo }}
         </h3>
 
         <p class="mt-0.5 text-[1.05rem] leading-tight text-black">
-          {{ tarjeta.subtitulo }}
+          {{ props.tarjeta.subtitulo }}
         </p>
       </div>
 
       <div class="overflow-hidden rounded-[1.65rem] bg-white">
         <img
-          :src="tarjeta.imagen"
-          :alt="tarjeta.alt"
+          :src="props.tarjeta.imagen"
+          :alt="props.tarjeta.alt"
           class="h-full w-full object-cover"
         >
       </div>
     </div>
 
     <div class="absolute bottom-5 right-5">
-      <BotonCircular :aria-label="`Abrir ${tarjeta.titulo}`" :to="rutaFlecha"/>
+      <BotonCircular
+        :aria-label="`Abrir ${props.tarjeta.titulo}`"
+        :to="props.rutaFlecha"
+      />
     </div>
   </article>
 
@@ -120,8 +119,8 @@ const esAncha = props.formato === 'ancha'
       : 'min-h-[430px] bg-white md:min-h-[460px]'"
   >
     <img
-      :src="tarjeta.imagen"
-      :alt="tarjeta.alt"
+      :src="props.tarjeta.imagen"
+      :alt="props.tarjeta.alt"
       class="absolute inset-0 h-full w-full object-cover"
     >
 
@@ -135,14 +134,14 @@ const esAncha = props.formato === 'ancha'
         class="font-bold leading-tight text-black"
         :class="esTablet ? 'text-[1.05rem]' : 'text-[1.05rem] md:text-[1.2rem]'"
       >
-        {{ tarjeta.titulo }}
+        {{ props.tarjeta.titulo }}
       </h3>
 
       <p
         class="mt-0.5 leading-tight text-black"
         :class="esTablet ? 'text-[1.05rem]' : 'text-[1.05rem] md:text-[1.2rem]'"
       >
-        {{ tarjeta.subtitulo }}
+        {{ props.tarjeta.subtitulo }}
       </p>
     </div>
 
@@ -150,7 +149,10 @@ const esAncha = props.formato === 'ancha'
       class="absolute z-10"
       :class="esTablet ? 'bottom-5 right-5' : 'bottom-5 right-5 md:bottom-6 md:right-6'"
     >
-      <BotonCircular :aria-label="`Abrir ${tarjeta.titulo}`" :to="rutaFlecha"/>
+      <BotonCircular
+        :aria-label="`Abrir ${props.tarjeta.titulo}`"
+        :to="props.rutaFlecha"
+      />
     </div>
   </article>
 
@@ -168,22 +170,22 @@ const esAncha = props.formato === 'ancha'
         class="font-bold leading-tight text-black"
         :class="esTablet ? 'text-[1.05rem]' : 'text-[1.05rem] md:text-[1.2rem]'"
       >
-        {{ tarjeta.titulo }}
+        {{ props.tarjeta.titulo }}
       </h3>
 
       <p
         class="mt-0.5 leading-tight text-black"
         :class="esTablet ? 'text-[1.05rem]' : 'text-[1.05rem] md:text-[1.2rem]'"
       >
-        {{ tarjeta.subtitulo }}
+        {{ props.tarjeta.subtitulo }}
       </p>
     </div>
 
     <div :class="esTablet ? 'mt-4 flex-1' : 'mt-4'">
       <div :class="esTablet ? 'h-full overflow-hidden rounded-[1.65rem] bg-white' : 'overflow-hidden rounded-[1.65rem] bg-white'">
         <img
-          :src="tarjeta.imagen"
-          :alt="tarjeta.alt"
+          :src="props.tarjeta.imagen"
+          :alt="props.tarjeta.alt"
           :class="esTablet ? 'h-full w-full object-cover' : 'w-full object-cover'"
         >
       </div>
@@ -193,7 +195,10 @@ const esAncha = props.formato === 'ancha'
       class="absolute"
       :class="esTablet ? 'bottom-5 right-5' : 'bottom-5 right-5 md:bottom-6 md:right-6'"
     >
-      <BotonCircular :aria-label="`Abrir ${tarjeta.titulo}`" :to="rutaFlecha"/>
+      <BotonCircular
+        :aria-label="`Abrir ${props.tarjeta.titulo}`"
+        :to="props.rutaFlecha"
+      />
     </div>
   </article>
 </template>
