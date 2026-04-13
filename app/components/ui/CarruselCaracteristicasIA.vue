@@ -30,6 +30,8 @@ const props = withDefaults(defineProps<Props>(), {
   rutaFlecha: ''
 })
 
+const { t } = useI18n()
+
 //Solo se pone un emit pq carrusel no abre el modal, si no que envia el evento al padre
 const emit = defineEmits<{
   (e: 'abrir-modal', modal: TarjetaModalIA): void
@@ -212,7 +214,7 @@ onBeforeUnmount(() => {
       <button
         type="button"
         class="inline-flex h-[2.6rem] w-[2.6rem] items-center justify-center rounded-full bg-[#f6f6f6] text-black/35 transition duration-200 hover:scale-[1.03] md:h-[2.8rem] md:w-[2.8rem]"
-        :aria-label="autoplayActivo ? 'Pausar carrusel' : 'Reproducir carrusel'"
+        :aria-label="autoplayActivo ? t('caracteristicasIA.carrusel.pausar') : t('caracteristicasIA.carrusel.reproducir')"
         @click="alternarAutoplay"
       >
         <svg
@@ -240,7 +242,7 @@ onBeforeUnmount(() => {
       <div
         class="inline-flex items-center gap-2 rounded-full bg-[#f6f6f6] px-[0.92rem] py-[0.72rem] md:gap-[0.55rem] md:px-[1.05rem] md:py-[0.8rem]"
         role="tablist"
-        aria-label="Indicadores de tarjetas de características IA"
+        :aria-label="t('caracteristicasIA.carrusel.indicadores')"
       >
         <button
           v-for="indice in totalTarjetas"
@@ -250,7 +252,7 @@ onBeforeUnmount(() => {
           :class="indiceActivo === indice - 1
             ? 'w-[1.8rem] bg-black/70 md:w-[2.1rem]'
             : ''"
-          :aria-label="`Ir a la tarjeta ${indice}`"
+          :aria-label="t('caracteristicasIA.carrusel.irATarjeta', { numero: indice })"
           :aria-pressed="indiceActivo === indice - 1 ? 'true' : 'false'"
           @click="irATarjeta(indice - 1)"
         />

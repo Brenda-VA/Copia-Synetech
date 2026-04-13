@@ -3,25 +3,15 @@
 este archivo coordina la sección completa sin comerse toda la lógica.
 Así queda más fácil de leer y también más fácil de escalar si luego añadimos más variantes. */
 
-// imports
-/* Import de ejemplo, no sirve pq ya le hice el autoimport en las etiquetas:
-El carrusel es un hijo especializado: solo se encarga de móvil y tablet pequeña.
-import CarruselCaracteristicasIA from '../ui/CarruselCaracteristicasIA.vue' */
-
-/* Import de ejemplo, no sirve pq ya le hice el autoimport en las etiquetas:
-La tarjeta reusable es otra hija.
-Esta la uso en tablet grande y desktop para no repetir el HTML de cada tarjeta.
-import TarjetaCaracteristicaIA from '../ui/UiTarjetaCaracteristicaIA.vue' */
-
 /* USAR TIPOS E IMPORTARLOS: */
-import type { TarjetaIA, TarjetaModalIA } from '~/types/tarjetas';//tmb se importa el modal para usarlo en las tarejtas q lo necesiten
+import type { TarjetaIA, TarjetaModalIA } from '~/types/tarjetas'//tmb se importa el modal para usarlo en las tarejtas q lo necesiten
+import { tarjetasCaracteristicasIAPorDefecto } from '~/data/caracteristicasIA'//las tarjetas por defecto se movieron a un fichero aparte dentro de data/, esto para ahorrar codigo
 
 // props
 /*NUEVO CAMBIO:
 Los hijos de este componente (CarruselCaracteristicasIA y TarjetaCaracteristicasIA ya usaban props, pero el pade( este archivo) no,
 así que se cambió el código para que este tmb acepte datos dinamicos con props haciendo que la nueva pagina pueda usar la misma estructura 
 sin duplicar codigo ------------------> IMPORTANTE*/
-
 
 interface Props { //----------> props que debe recibir este componente
   titulo?: string
@@ -33,72 +23,28 @@ interface Props { //----------> props que debe recibir este componente
 Si se reciben datos desde fuera (por ejemplo desde otra página), estos tendrán prioridad.
 Los props de arriba serán los ideales pero estan marcados como opcionales por si no se les pasa nada, en ese caso se usan estos props */
 const props = withDefaults(defineProps<Props>(), {//---> withDefaults para dejarle valores por defecto por si no se le pasa nada
-  titulo: 'La pantalla interactiva con IA que está revolucionando la educación en los colegios',
+  titulo: '',
   tarjetas: () => [],
   rutaFlechas: ''
 })
 
-/* datos por defecto
-Este array actúa como fallback en caso de que no se pasen tarjetas desde el exterior.
-Permite que el componente siga funcionando de forma autónoma (por ejemplo en la home). */
-const tarjetasDefault: TarjetaIA[] = [//----------> Tmb se tipan los datos por defecto que se le pasen
-  {
-    id: 1,
-    tipo: 'imagen-fondo',
-    titulo: 'Pregúntale',
-    subtitulo: 'a la IA',
-    imagen: '/imagenes/asistente-ia-1024w.webp',
-    alt: 'Profesor usando asistente de IA en pantalla interactiva',
-    modal: {// Tarjeta con modal, se le añade la nueva propiedad
-      titulo: 'Formaciones para colegios',
-      descripcion: 'Ofrecemos formaciones para centros educativos sobre el uso de pantallas interactivas, herramientas digitales e inteligencia artificial en el aula.'
-    }
-  },
-  {
-    id: 2,
-    tipo: 'blanca',
-    titulo: 'Conviértete en un artista',
-    subtitulo: 'con IA generativa',
-    imagen: '/imagenes/ia-generativa-1512w.webp',
-    alt: 'Pantalla interactiva con dibujo generado por IA'
-    
-  },
-  {
-    id: 3,
-    tipo: 'imagen-fondo',
-    titulo: 'Subtitula tus vídeos',
-    subtitulo: 'automáticamente',
-    imagen: '/imagenes/subtitulos-automaticos-ia-1024w.webp',
-    alt: 'Clase viendo subtítulos automáticos en pantalla'
-  },
-  {
-    id: 4,
-    tipo: 'blanca',
-    titulo: 'Traduce audio en tiempo real:',
-    subtitulo: 'rompe barreras de idioma al instante',
-    imagen: '/imagenes/traduccion-automatica-ia-1280w.webp',
-    alt: 'Pantalla mostrando traducción automática en tiempo real',
-    ancha: false
-  },
-  {
-    id: 5,
-    tipo: 'blanca',
-    titulo: 'Invitado, Usuario, Administrador.',
-    subtitulo: 'Gestiona los perfiles de forma sencilla y segura',
-    imagen: '/imagenes/gestion-perfiles-usuario-1024w.webp',
-    alt: 'Pantalla con gestión de perfiles de usuario',
-    ancha: true
-  }
-]
+/*useI18n =  Composable (una función especial de la librería), se conecta con la configuracion global de i18n y detecta el idoma q se esté seleccionando
+  t = funcion de traducción, sirve para buscar palabras en el archivo json*/
+const { t } = useI18n()
 
 /* selección de datos
 Se priorizan las tarjetas recibidas por props.
 Si no existen o están vacías, se utilizan las tarjetas por defecto.
 Esto hace que el componente sea reutilizable sin romper su funcionamiento original. */
-
-
 const tarjetas = computed<TarjetaIA[]>(() => {//computed ref para recalcular automaticamente que tarjetas usar, ahora se accede con .value
-  return props.tarjetas.length ? props.tarjetas : tarjetasDefault//USAR PROPS, antes era const tarjetas = tarjetasProp.length ? tarjetasProp : tarjetasDefault
+  return props.tarjetas.length ? props.tarjetas : tarjetasCaracteristicasIAPorDefecto //tarjetas por defecto importadas de /data
+})
+
+/* Determina el titulo de la seción por prioridades:
+    1. Usa el titulo personalizado si lo recibe por props
+    2. Si no recibe props, usa el titulo por defecto del archivo json*/
+const tituloSeccionResuelto = computed(() => {
+  return props.titulo || t('caracteristicasIA.heading')
 })
 
 //estos slices dividen mi lista de tarjetas en 2 grupos -----------> COMPUTED
@@ -109,10 +55,11 @@ const tarjetasInferiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(3))/
 
 const tarjetasTabletSuperiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(0, 4))
 
-const tarjetaFallbackAncha = tarjetasDefault.find((tarjeta) => tarjeta.ancha) ?? tarjetasDefault[0]!//aqui primero busca una tarjeta marcada como ancha y si no llega desde props se sa una del fallback por defecto
+const tarjetaFallbackAncha = tarjetasCaracteristicasIAPorDefecto.find((tarjeta) => tarjeta.ancha) ?? tarjetasCaracteristicasIAPorDefecto[0]!//aqui primero busca una tarjeta marcada como ancha y si no llega desde props se sa una del fallback por defecto
 const tarjetaTabletAncha = computed<TarjetaIA>(() => {
   return tarjetas.value.find((tarjeta) => tarjeta.ancha) ?? tarjetaFallbackAncha
 })
+
 //MODAL ----------
 const modalAbierto = ref(false)
 const modalActivo = ref<TarjetaModalIA | null>(null)
@@ -126,9 +73,8 @@ function cerrarModal() {
   modalAbierto.value = false
   modalActivo.value = null
 }//-------------
-
-
 </script>
+
 <template>
   <!-- sección padre -->
   <!-- Este contenedor define la estructura general de la sección.
@@ -137,12 +83,13 @@ function cerrarModal() {
     <div class="mx-auto max-w-[1440px] px-4 md:px-8 xl:px-10">
 
       <!-- cabecera -->
-      <!-- El título se recibe por props, lo que permite reutilizar la sección con distintos contenidos.
-           Se mantiene una estructura visual consistente independientemente del texto mostrado. -->
+      <!-- El título se puede recibir por props o salir del locale por defecto.
+           Así no rompemos la reutilización actual del componente. -->
       <h2
         class="max-w-[1320px] text-[2.2rem] font-semibold leading-[1.15] tracking-tight text-black md:text-[3.2rem] xl:text-[3.75rem]"
       >
-        {{ props.titulo }}
+      <!-- muestra el titulo con mayor prioridad, ya sea prop o la linea de traduccion i18n -->
+        {{ tituloSeccionResuelto }}
       </h2>
 
       <!-- móvil + tablet pequeña -->
@@ -214,50 +161,51 @@ function cerrarModal() {
     </div>
   </section>
 
-
   <!-- Teleport to="body": Hace que el modal se pinte directamente dentro del body, no encerrado en la secion -->
-<Teleport to="body">
-  <!-- v-if="modalAbierto && modalActivo": Solo se muestra si:  - está abierto
-                                                                - hay contenido real 
-        @click="cerrarModal": Si haces click en el fondo oscuro, se cierra.                                                                
-        @click.stop: Si haces click dentro de la caja blanca, no se cierra.-->
-  <div
-    v-if="modalAbierto && modalActivo"
-    class="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 px-4"
-    @click="cerrarModal"
-  >
+  <Teleport to="body">
+    <!-- v-if="modalAbierto && modalActivo": Solo se muestra si:  - está abierto
+                                                                  - hay contenido real 
+          @click="cerrarModal": Si haces click en el fondo oscuro, se cierra.                                                                
+          @click.stop: Si haces click dentro de la caja blanca, no se cierra.-->
     <div
-      class="w-full max-w-[560px] rounded-[2rem] bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.22)] md:p-8"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="titulo-modal-ia"
-      @click.stop
+      v-if="modalAbierto && modalActivo"
+      class="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 px-4"
+      @click="cerrarModal"
     >
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3
-            id="titulo-modal-ia"
-            class="text-[1.4rem] font-semibold leading-tight text-black md:text-[1.7rem]"
+      <div
+        class="w-full max-w-[560px] rounded-[2rem] bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.22)] md:p-8"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="titulo-modal-ia"
+        @click.stop
+      >
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3
+              id="titulo-modal-ia"
+              class="text-[1.4rem] font-semibold leading-tight text-black md:text-[1.7rem]"
+            >
+            <!-- se define el texto buscandolo segun la clave de idioma
+             La secuencia es: los datos de modalActivo vienen de la propiedad modal definida en el tipo de los objetos de tarjetas.ts
+             y aqui esta seleccionando el titulokey de mi tipo definido para tarjetas modal     -------------- TRADUCIENDO CON I18N -------------->
+              {{ t(modalActivo.tituloKey) }}
+            </h3>
+
+            <p class="mt-4 text-[1rem] leading-[1.6] text-black/75">
+              {{ t(modalActivo.descripcionKey) }}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black text-white"
+            :aria-label="t('caracteristicasIA.modal.cerrar')"
+            @click="cerrarModal"
           >
-            {{ modalActivo.titulo }}
-          </h3>
-
-          <p class="mt-4 text-[1rem] leading-[1.6] text-black/75">
-            {{ modalActivo.descripcion }}
-          </p>
+            ✕
+          </button>
         </div>
-
-        <button
-          type="button"
-          class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black text-white"
-          aria-label="Cerrar modal"
-          @click="cerrarModal"
-        >
-          ✕
-        </button>
       </div>
     </div>
-  </div>
-</Teleport>
-
+  </Teleport>
 </template>

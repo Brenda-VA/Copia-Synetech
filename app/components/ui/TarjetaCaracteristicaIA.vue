@@ -7,14 +7,13 @@
 // imports
 // Este botón ya existía en tu proyecto y lo reutilizo para no romper el estilo.
 import BotonCircular from './BotonCircular.vue'
-import type { TarjetaIA, TarjetaVista, TarjetaFormato, TarjetaModalIA} from '~/types/tarjetas'
+import type { TarjetaIA, TarjetaVista, TarjetaFormato, TarjetaModalIA } from '~/types/tarjetas'
 
 // props
 // Aquí recibo:
 // - tarjeta: el objeto con los datos reales
 // - vista: me dice en qué contexto se está usando la tarjeta
 // - formato: me sirve para alguna variante concreta, como la tarjeta ancha de tablet
-
 interface Props {
   tarjeta: TarjetaIA
   vista?: TarjetaVista
@@ -27,6 +26,8 @@ const props = withDefaults(defineProps<Props>(), {//withDefaults ya se sabe que 
   formato: 'estandar',
   rutaFlecha: ''
 })
+
+const { t } = useI18n()
 
 // MODAL
 const emit = defineEmits<{//esto indica que el componente puede emitir un evento llamado abrir-modal y que cuando lo haga, se enviará un objeto del tipo TarjetaModalIA
@@ -47,6 +48,10 @@ const esMovil = computed(() => props.vista === 'movil')
 const esTablet = computed(() => props.vista === 'tablet')
 const esImagenFondo = computed(() => props.tarjeta.tipo === 'imagen-fondo')
 const esAncha = computed(() => props.formato === 'ancha')
+const tituloTraducido = computed(() => t(props.tarjeta.tituloKey))
+const subtituloTraducido = computed(() => t(props.tarjeta.subtituloKey))
+const altTraducido = computed(() => t(props.tarjeta.altKey))
+const ariaLabelBoton = computed(() => t('caracteristicasIA.acciones.abrirTarjeta', { titulo: tituloTraducido.value }))
 </script>
 
 <template>
@@ -59,11 +64,11 @@ const esAncha = computed(() => props.formato === 'ancha')
   >
     <div class="tarjeta-ia-movil__texto">
       <h3 class="tarjeta-ia-movil__titulo">
-        {{ props.tarjeta.titulo }}
+        {{ tituloTraducido }}
       </h3>
 
       <p class="tarjeta-ia-movil__subtitulo">
-        {{ props.tarjeta.subtitulo }}
+        {{ subtituloTraducido }}
       </p>
     </div>
 
@@ -75,7 +80,7 @@ const esAncha = computed(() => props.formato === 'ancha')
     >
       <img
         :src="props.tarjeta.imagen"
-        :alt="props.tarjeta.alt"
+        :alt="altTraducido"
         class="tarjeta-ia-movil__imagen"
         :class="esImagenFondo
           ? 'tarjeta-ia-movil__imagen--cover'
@@ -94,18 +99,18 @@ const esAncha = computed(() => props.formato === 'ancha')
     <div class="grid min-h-[320px] gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.45fr)]">
       <div class="pr-10">
         <h3 class="text-[1.05rem] font-bold leading-tight text-black">
-          {{ props.tarjeta.titulo }}
+          {{ tituloTraducido }}
         </h3>
 
         <p class="mt-0.5 text-[1.05rem] leading-tight text-black">
-          {{ props.tarjeta.subtitulo }}
+          {{ subtituloTraducido }}
         </p>
       </div>
 
       <div class="overflow-hidden rounded-[1.65rem] bg-white">
         <img
           :src="props.tarjeta.imagen"
-          :alt="props.tarjeta.alt"
+          :alt="altTraducido"
           class="h-full w-full object-cover"
         >
       </div>
@@ -116,7 +121,7 @@ const esAncha = computed(() => props.formato === 'ancha')
       si la tiene modal, no navega y al hacerle click emite el evento
            si no tiene modal, entonces usa la ruta normal y redirige a la otra pagina-->
       <BotonCircular
-        :aria-label="`Abrir ${props.tarjeta.titulo}`"
+        :aria-label="ariaLabelBoton"
         :to="props.tarjeta.modal ? '' : props.rutaFlecha"
         @click="props.tarjeta.modal ? manejarAccionBoton() : null"
       />
@@ -135,7 +140,7 @@ const esAncha = computed(() => props.formato === 'ancha')
   >
     <img
       :src="props.tarjeta.imagen"
-      :alt="props.tarjeta.alt"
+      :alt="altTraducido"
       class="absolute inset-0 h-full w-full object-cover"
     >
 
@@ -149,14 +154,14 @@ const esAncha = computed(() => props.formato === 'ancha')
         class="font-bold leading-tight text-black"
         :class="esTablet ? 'text-[1.05rem]' : 'text-[1.05rem] md:text-[1.2rem]'"
       >
-        {{ props.tarjeta.titulo }}
+        {{ tituloTraducido }}
       </h3>
 
       <p
         class="mt-0.5 leading-tight text-black"
         :class="esTablet ? 'text-[1.05rem]' : 'text-[1.05rem] md:text-[1.2rem]'"
       >
-        {{ props.tarjeta.subtitulo }}
+        {{ subtituloTraducido }}
       </p>
     </div>
 
@@ -166,9 +171,9 @@ const esAncha = computed(() => props.formato === 'ancha')
     >
     <!-- HACER POSIBLE EL EVENTO DEL MODAL -->
       <BotonCircular
-        :aria-label="`Abrir ${props.tarjeta.titulo}`"
+        :aria-label="ariaLabelBoton"
         :to="props.tarjeta.modal ? '' : props.rutaFlecha"
-        @click="props.tarjeta.modal ? manejarAccionBoton() : null" 
+        @click="props.tarjeta.modal ? manejarAccionBoton() : null"
       />
     </div>
   </article>
@@ -187,14 +192,14 @@ const esAncha = computed(() => props.formato === 'ancha')
         class="font-bold leading-tight text-black"
         :class="esTablet ? 'text-[1.05rem]' : 'text-[1.05rem] md:text-[1.2rem]'"
       >
-        {{ props.tarjeta.titulo }}
+        {{ tituloTraducido }}
       </h3>
 
       <p
         class="mt-0.5 leading-tight text-black"
         :class="esTablet ? 'text-[1.05rem]' : 'text-[1.05rem] md:text-[1.2rem]'"
       >
-        {{ props.tarjeta.subtitulo }}
+        {{ subtituloTraducido }}
       </p>
     </div>
 
@@ -202,7 +207,7 @@ const esAncha = computed(() => props.formato === 'ancha')
       <div :class="esTablet ? 'h-full overflow-hidden rounded-[1.65rem] bg-white' : 'overflow-hidden rounded-[1.65rem] bg-white'">
         <img
           :src="props.tarjeta.imagen"
-          :alt="props.tarjeta.alt"
+          :alt="altTraducido"
           :class="esTablet ? 'h-full w-full object-cover' : 'w-full object-cover'"
         >
       </div>
@@ -213,7 +218,7 @@ const esAncha = computed(() => props.formato === 'ancha')
       :class="esTablet ? 'bottom-5 right-5' : 'bottom-5 right-5 md:bottom-6 md:right-6'"
     >
       <BotonCircular
-        :aria-label="`Abrir ${props.tarjeta.titulo}`"
+        :aria-label="ariaLabelBoton"
         :to="props.tarjeta.modal ? '' : props.rutaFlecha"
         @click="props.tarjeta.modal ? manejarAccionBoton() : null"
       />
