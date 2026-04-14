@@ -1,33 +1,32 @@
 <script setup lang="ts">
 // script setup
-// Esta componente hija solo se dedica a pintar una tarjeta.
-// No guarda el array completo, no sabe nada del swiper y no decide breakpoints globales.
-// Solo recibe datos y los muestra según la variante que le indique el padre.
+/* Esta componente hija solo se dedica a pintar una tarjeta.
+No guarda el array completo, no sabe nada del swiper y no decide breakpoints globales.
+Solo recibe datos y los muestra según la variante que le indique el padre. */
 
 // imports
-// Este botón ya existía en tu proyecto y lo reutilizo para no romper el estilo.
+//reutilizamos botón
 import BotonCircular from './BotonCircular.vue'
 import type { TarjetaIA, TarjetaVista, TarjetaFormato, TarjetaModalIA } from '~/types/tarjetas'
 
-// props
-// Aquí recibo:
-// - tarjeta: el objeto con los datos reales
-// - vista: me dice en qué contexto se está usando la tarjeta
-// - formato: me sirve para alguna variante concreta, como la tarjeta ancha de tablet
+// props - Aquí recibo:
+/*  - tarjeta: el objeto con los datos reales
+    - vista: me dice en qué contexto se está usando la tarjeta
+    - formato: me sirve para alguna variante concreta, como la tarjeta ancha de tablet */
 interface Props {
   tarjeta: TarjetaIA
   vista?: TarjetaVista
   formato?: TarjetaFormato
   rutaFlecha?: string
+  abrirTarjetaLabel?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {//withDefaults ya se sabe que dentro del componete siempre habrá un valor usable
   vista: 'desktop',
   formato: 'estandar',
-  rutaFlecha: ''
+  rutaFlecha: '',
+  abrirTarjetaLabel: ''
 })
-
-const { t } = useI18n()
 
 // MODAL
 const emit = defineEmits<{//esto indica que el componente puede emitir un evento llamado abrir-modal y que cuando lo haga, se enviará un objeto del tipo TarjetaModalIA
@@ -48,10 +47,12 @@ const esMovil = computed(() => props.vista === 'movil')
 const esTablet = computed(() => props.vista === 'tablet')
 const esImagenFondo = computed(() => props.tarjeta.tipo === 'imagen-fondo')
 const esAncha = computed(() => props.formato === 'ancha')
-const tituloTraducido = computed(() => t(props.tarjeta.tituloKey))
-const subtituloTraducido = computed(() => t(props.tarjeta.subtituloKey))
-const altTraducido = computed(() => t(props.tarjeta.altKey))
-const ariaLabelBoton = computed(() => t('caracteristicasIA.acciones.abrirTarjeta', { titulo: tituloTraducido.value }))
+
+/* esta hija ya no traduce nada
+el padre o la pagina traducen arriba y aqui solo se renderiza el texto ya listo */
+/* el texto base del aria-label baja desde el padre
+asi aqui solo se completa con el titulo y no metemos i18n dentro del hijo */
+const ariaLabelBoton = computed(() => `${props.abrirTarjetaLabel} ${props.tarjeta.titulo}`.trim())
 </script>
 
 <template>
@@ -64,11 +65,11 @@ const ariaLabelBoton = computed(() => t('caracteristicasIA.acciones.abrirTarjeta
   >
     <div class="tarjeta-ia-movil__texto">
       <h3 class="tarjeta-ia-movil__titulo">
-        {{ tituloTraducido }}
+        {{ props.tarjeta.titulo }}
       </h3>
 
       <p class="tarjeta-ia-movil__subtitulo">
-        {{ subtituloTraducido }}
+        {{ props.tarjeta.subtitulo }}
       </p>
     </div>
 
@@ -80,7 +81,7 @@ const ariaLabelBoton = computed(() => t('caracteristicasIA.acciones.abrirTarjeta
     >
       <img
         :src="props.tarjeta.imagen"
-        :alt="altTraducido"
+        :alt="props.tarjeta.alt"
         class="tarjeta-ia-movil__imagen"
         :class="esImagenFondo
           ? 'tarjeta-ia-movil__imagen--cover'
@@ -99,18 +100,18 @@ const ariaLabelBoton = computed(() => t('caracteristicasIA.acciones.abrirTarjeta
     <div class="grid min-h-[320px] gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.45fr)]">
       <div class="pr-10">
         <h3 class="text-[1.05rem] font-bold leading-tight text-black">
-          {{ tituloTraducido }}
+          {{ props.tarjeta.titulo }}
         </h3>
 
         <p class="mt-0.5 text-[1.05rem] leading-tight text-black">
-          {{ subtituloTraducido }}
+          {{ props.tarjeta.subtitulo }}
         </p>
       </div>
 
       <div class="overflow-hidden rounded-[1.65rem] bg-white">
         <img
           :src="props.tarjeta.imagen"
-          :alt="altTraducido"
+          :alt="props.tarjeta.alt"
           class="h-full w-full object-cover"
         >
       </div>
@@ -140,7 +141,7 @@ const ariaLabelBoton = computed(() => t('caracteristicasIA.acciones.abrirTarjeta
   >
     <img
       :src="props.tarjeta.imagen"
-      :alt="altTraducido"
+      :alt="props.tarjeta.alt"
       class="absolute inset-0 h-full w-full object-cover"
     >
 
@@ -154,14 +155,14 @@ const ariaLabelBoton = computed(() => t('caracteristicasIA.acciones.abrirTarjeta
         class="font-bold leading-tight text-black"
         :class="esTablet ? 'text-[1.05rem]' : 'text-[1.05rem] md:text-[1.2rem]'"
       >
-        {{ tituloTraducido }}
+        {{ props.tarjeta.titulo }}
       </h3>
 
       <p
         class="mt-0.5 leading-tight text-black"
         :class="esTablet ? 'text-[1.05rem]' : 'text-[1.05rem] md:text-[1.2rem]'"
       >
-        {{ subtituloTraducido }}
+        {{ props.tarjeta.subtitulo }}
       </p>
     </div>
 
@@ -192,14 +193,14 @@ const ariaLabelBoton = computed(() => t('caracteristicasIA.acciones.abrirTarjeta
         class="font-bold leading-tight text-black"
         :class="esTablet ? 'text-[1.05rem]' : 'text-[1.05rem] md:text-[1.2rem]'"
       >
-        {{ tituloTraducido }}
+        {{ props.tarjeta.titulo }}
       </h3>
 
       <p
         class="mt-0.5 leading-tight text-black"
         :class="esTablet ? 'text-[1.05rem]' : 'text-[1.05rem] md:text-[1.2rem]'"
       >
-        {{ subtituloTraducido }}
+        {{ props.tarjeta.subtitulo }}
       </p>
     </div>
 
@@ -207,7 +208,7 @@ const ariaLabelBoton = computed(() => t('caracteristicasIA.acciones.abrirTarjeta
       <div :class="esTablet ? 'h-full overflow-hidden rounded-[1.65rem] bg-white' : 'overflow-hidden rounded-[1.65rem] bg-white'">
         <img
           :src="props.tarjeta.imagen"
-          :alt="altTraducido"
+          :alt="props.tarjeta.alt"
           :class="esTablet ? 'h-full w-full object-cover' : 'w-full object-cover'"
         >
       </div>

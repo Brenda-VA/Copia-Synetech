@@ -24,13 +24,21 @@ import { Autoplay, A11y } from 'swiper/modules'
 interface Props {
   tarjetas: TarjetaIA[]
   rutaFlecha?: string
+  abrirTarjetaLabel?: string
+  // estos labels ya vienen traducidos desde el padre
+  // asi el carrusel no usa i18n y solo consume texto listo
+  labels: {
+    play: string
+    pause: string
+    indicadores: string
+    irATarjeta: (index: number) => string
+  }
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  rutaFlecha: ''
+  rutaFlecha: '',
+  abrirTarjetaLabel: ''
 })
-
-const { t } = useI18n()
 
 //Solo se pone un emit pq carrusel no abre el modal, si no que envia el evento al padre
 const emit = defineEmits<{
@@ -55,7 +63,7 @@ const modulosSwiper = [Autoplay, A11y]
 const totalTarjetas = computed<number>(() => props.tarjetas.length)//tmb se tipan las tarjetas
 
 /* ciclo de vida del swiper
-Cuando Swiper se monta, guardo su instancia para poder controlarla más tarde. 
+Cuando Swiper se monta, guardo su instancia para poder controlarla más tarde.
 TAMBIÉN SE TIPAN LAS FUNCIONES*/
 function guardarSwiper(swiper: SwiperInstance) {
   swiperCaracteristicas.value = swiper
@@ -200,11 +208,12 @@ onBeforeUnmount(() => {
         :key="tarjeta.id"
         class="pb-2"
       >
-      <!-- su una tarjeta del carrusel emite abrir-modal, el carrusel lo envia la padre -->
+      <!-- si una tarjeta del carrusel emite abrir-modal, el carrusel lo envia al padre -->
         <TarjetaCaracteristicaIA
           :tarjeta="tarjeta"
           vista="movil"
           :ruta-flecha="props.rutaFlecha"
+          :abrir-tarjeta-label="props.abrirTarjetaLabel"
           @abrir-modal="emit('abrir-modal', $event)"
         />
       </SwiperSlide>
@@ -214,7 +223,7 @@ onBeforeUnmount(() => {
       <button
         type="button"
         class="inline-flex h-[2.6rem] w-[2.6rem] items-center justify-center rounded-full bg-[#f6f6f6] text-black/35 transition duration-200 hover:scale-[1.03] md:h-[2.8rem] md:w-[2.8rem]"
-        :aria-label="autoplayActivo ? t('caracteristicasIA.carrusel.pausar') : t('caracteristicasIA.carrusel.reproducir')"
+        :aria-label="autoplayActivo ? props.labels.pause : props.labels.play"
         @click="alternarAutoplay"
       >
         <svg
@@ -242,7 +251,7 @@ onBeforeUnmount(() => {
       <div
         class="inline-flex items-center gap-2 rounded-full bg-[#f6f6f6] px-[0.92rem] py-[0.72rem] md:gap-[0.55rem] md:px-[1.05rem] md:py-[0.8rem]"
         role="tablist"
-        :aria-label="t('caracteristicasIA.carrusel.indicadores')"
+        :aria-label="props.labels.indicadores"
       >
         <button
           v-for="indice in totalTarjetas"
@@ -252,7 +261,7 @@ onBeforeUnmount(() => {
           :class="indiceActivo === indice - 1
             ? 'w-[1.8rem] bg-black/70 md:w-[2.1rem]'
             : ''"
-          :aria-label="t('caracteristicasIA.carrusel.irATarjeta', { numero: indice })"
+          :aria-label="props.labels.irATarjeta(indice)"
           :aria-pressed="indiceActivo === indice - 1 ? 'true' : 'false'"
           @click="irATarjeta(indice - 1)"
         />
@@ -260,15 +269,3 @@ onBeforeUnmount(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-/* Este CSS sí conviene dejarlo porque afecta a clases internas de Swiper. */
-:deep(.swiper-wrapper) {
-  align-items: stretch;
-}
-
-:deep(.swiper-slide) {
-  height: auto;
-  min-width: 0;
-}
-</style>

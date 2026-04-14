@@ -5,11 +5,10 @@ Así queda más fácil de leer y también más fácil de escalar si luego añadi
 
 /* USAR TIPOS E IMPORTARLOS: */
 import type { TarjetaIA, TarjetaModalIA } from '~/types/tarjetas'//tmb se importa el modal para usarlo en las tarejtas q lo necesiten
-import { tarjetasCaracteristicasIAPorDefecto } from '~/data/caracteristicasIA'//las tarjetas por defecto se movieron a un fichero aparte dentro de data/, esto para ahorrar codigo
+import { crearTarjetasIA } from '~/data/caracteristicasIA'//las tarjetas por defecto ya no salen de un array fijo, ahora se crean aqui usando t
 
 // props
-/*NUEVO CAMBIO:
-Los hijos de este componente (CarruselCaracteristicasIA y TarjetaCaracteristicasIA ya usaban props, pero el pade( este archivo) no,
+/*Los hijos de este componente (CarruselCaracteristicasIA y TarjetaCaracteristicasIA ya usaban props, pero el pade( este archivo) no,
 así que se cambió el código para que este tmb acepte datos dinamicos con props haciendo que la nueva pagina pueda usar la misma estructura 
 sin duplicar codigo ------------------> IMPORTANTE*/
 
@@ -32,12 +31,16 @@ const props = withDefaults(defineProps<Props>(), {//---> withDefaults para dejar
   t = funcion de traducción, sirve para buscar palabras en el archivo json*/
 const { t } = useI18n()
 
+/* aqui se crean las tarjetas por defecto ya traducidas
+el padre resuelve este fallback y luego los hijos solo pintan texto final */
+const tarjetasPorDefecto = computed<TarjetaIA[]>(() => crearTarjetasIA(t))
+
 /* selección de datos
 Se priorizan las tarjetas recibidas por props.
 Si no existen o están vacías, se utilizan las tarjetas por defecto.
 Esto hace que el componente sea reutilizable sin romper su funcionamiento original. */
 const tarjetas = computed<TarjetaIA[]>(() => {//computed ref para recalcular automaticamente que tarjetas usar, ahora se accede con .value
-  return props.tarjetas.length ? props.tarjetas : tarjetasCaracteristicasIAPorDefecto //tarjetas por defecto importadas de /data
+  return props.tarjetas.length ? props.tarjetas : tarjetasPorDefecto.value //tarjetas por defecto creadas desde /data con i18n
 })
 
 /* Determina el titulo de la seción por prioridades:
@@ -53,11 +56,29 @@ basicamente se ordenan solas sin importar el numero de tarjetas que le pase*/
 const tarjetasSuperiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(0, 3))//toma las 3 primeras
 const tarjetasInferiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(3))//toma las que sobren a partir de la posicion 3
 
-const tarjetasTabletSuperiores = computed<TarjetaIA[]>(() => tarjetas.value.slice(0, 4))
+/* en tablet separo la tarjeta ancha del resto
+si no hago esto, la misma tarjeta puede salir en el grid normal y otra vez abajo */
+const tarjetasTabletNormales = computed<TarjetaIA[]>(() => {
+  return tarjetas.value.filter((tarjeta: TarjetaIA) => !tarjeta.ancha).slice(0, 4)
+})
 
-const tarjetaFallbackAncha = tarjetasCaracteristicasIAPorDefecto.find((tarjeta) => tarjeta.ancha) ?? tarjetasCaracteristicasIAPorDefecto[0]!//aqui primero busca una tarjeta marcada como ancha y si no llega desde props se sa una del fallback por defecto
+const tarjetaFallbackAncha = computed<TarjetaIA>(() => {
+  return tarjetasPorDefecto.value.find((tarjeta: TarjetaIA) => tarjeta.ancha) ?? tarjetasPorDefecto.value[0]!
+})//aqui primero busca una tarjeta marcada como ancha y si no llega desde props se sa una del fallback por defecto
+
 const tarjetaTabletAncha = computed<TarjetaIA>(() => {
-  return tarjetas.value.find((tarjeta) => tarjeta.ancha) ?? tarjetaFallbackAncha
+  return tarjetas.value.find((tarjeta: TarjetaIA) => tarjeta.ancha) ?? tarjetaFallbackAncha.value
+})
+
+/* el carrusel ya no traduce por dentro
+por eso estos labels se resuelven aqui arriba y se le pasan ya listos */
+const labelsCarrusel = computed(() => {
+  return {
+    play: t('caracteristicasIA.carrusel.reproducir'),
+    pause: t('caracteristicasIA.carrusel.pausar'),
+    indicadores: t('caracteristicasIA.carrusel.indicadores'),
+    irATarjeta: (index: number) => t('caracteristicasIA.carrusel.irATarjeta', { numero: index })
+  }
 })
 
 //MODAL ----------
@@ -99,6 +120,7 @@ function cerrarModal() {
         class="mt-8 lg:hidden"
         :tarjetas="tarjetas"
         :ruta-flecha="props.rutaFlechas"
+        :labels="labelsCarrusel"
         @abrir-modal="abrirModal"
       />
 
@@ -111,7 +133,7 @@ function cerrarModal() {
           <!-- Se recorre el array y se renderiza una tarjeta por cada elemento.
                Cada tarjeta recibe únicamente los datos que necesita. -->
           <UiTarjetaCaracteristicaIA
-            v-for="tarjeta in tarjetasTabletSuperiores"
+            v-for="tarjeta in tarjetasTabletNormales"
             :key="tarjeta.id"
             :tarjeta="tarjeta"
             vista="tablet"
@@ -185,14 +207,13 @@ function cerrarModal() {
               id="titulo-modal-ia"
               class="text-[1.4rem] font-semibold leading-tight text-black md:text-[1.7rem]"
             >
-            <!-- se define el texto buscandolo segun la clave de idioma
-             La secuencia es: los datos de modalActivo vienen de la propiedad modal definida en el tipo de los objetos de tarjetas.ts
-             y aqui esta seleccionando el titulokey de mi tipo definido para tarjetas modal     -------------- TRADUCIENDO CON I18N -------------->
-              {{ t(modalActivo.tituloKey) }}
+            <!-- el texto del modal ya viene traducido desde arriba
+             aqui ya no se usa t() para el contenido, solo se pinta -->
+              {{ modalActivo.titulo }}
             </h3>
 
             <p class="mt-4 text-[1rem] leading-[1.6] text-black/75">
-              {{ t(modalActivo.descripcionKey) }}
+              {{ modalActivo.descripcion }}
             </p>
           </div>
 
