@@ -94,6 +94,14 @@ function cerrarModal() {
   modalAbierto.value = false
   modalActivo.value = null
 }//-------------
+
+//Convertir ruta plana a una versión que detecte el idioma antes de eviarselas a los hijos
+const localePath = useLocalePath()
+/* esta ruta ya sale adaptada al idioma actual
+si estoy en ingles y la ruta base es /prueba, aqui se resuelve a la version en inglés o el idioma del que venga */
+const rutaFlechasResuelta = computed(() => {
+  return props.rutaFlechas ? localePath(props.rutaFlechas) : ''
+})
 </script>
 
 <template>
@@ -119,7 +127,7 @@ function cerrarModal() {
       <UiCarruselCaracteristicasIA
         class="mt-8 lg:hidden"
         :tarjetas="tarjetas"
-        :ruta-flecha="props.rutaFlechas"
+        :ruta-flecha="rutaFlechasResuelta"
         :labels="labelsCarrusel"
         @abrir-modal="abrirModal"
       />
@@ -137,7 +145,7 @@ function cerrarModal() {
             :key="tarjeta.id"
             :tarjeta="tarjeta"
             vista="tablet"
-            :ruta-flecha="props.rutaFlechas"
+            :ruta-flecha="rutaFlechasResuelta"
             @abrir-modal="abrirModal"
           />
         </div>
@@ -147,7 +155,7 @@ function cerrarModal() {
             :tarjeta="tarjetaTabletAncha"
             vista="tablet"
             formato="ancha"
-            :ruta-flecha="props.rutaFlechas"
+            :ruta-flecha="rutaFlechasResuelta"
             @abrir-modal="abrirModal"
           />
         </div>
@@ -163,7 +171,7 @@ function cerrarModal() {
             :key="tarjeta.id"
             :tarjeta="tarjeta"
             vista="desktop"
-            :ruta-flecha="props.rutaFlechas"
+            :ruta-flecha="rutaFlechasResuelta"
             @abrir-modal="abrirModal"
           />
         </div>
@@ -174,7 +182,7 @@ function cerrarModal() {
             :key="tarjeta.id"
             :tarjeta="tarjeta"
             vista="desktop"
-            :ruta-flecha="props.rutaFlechas"
+            :ruta-flecha="rutaFlechasResuelta"
             @abrir-modal="abrirModal"
           />
         </div>
