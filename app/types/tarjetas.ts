@@ -19,3 +19,12 @@ export interface TarjetaModalIA {
   titulo: string
   descripcion: string
 }
+
+//este tipo es solo para las tarjetas de Suite Educativa, asi no se mezclan los datos de Suite con los de IA
+export interface TarjetaSuiteData {
+  id: number
+  titulo: string
+  descripcion: string
+  imagen: string
+  alt: string
+}
