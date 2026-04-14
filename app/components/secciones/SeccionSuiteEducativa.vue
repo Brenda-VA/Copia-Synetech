@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /*script setup
 En Vue, <script setup> es una forma corta y muy cómoda de escribir componentes.
 Todo lo que se declare aquí queda disponible directamente en el template,
@@ -20,12 +20,13 @@ Navigation es un módulo extra de Swiper.
 Swiper funciona por piezas: tú activas solo lo que necesitas.
 Aquí lo necesitamos para que los botones de anterior/siguiente controlen el carrusel.*/
 import { Navigation } from 'swiper/modules'
+import type { TarjetaSuiteData } from '~/types/tarjetas'
 
 /* estilos externos
 Estos imports no son lógica de Vue, sino estilos CSS que Swiper necesita
 para que el carrusel y sus controles se vean y funcionen correctamente. */
-import 'swiper/css'
-import 'swiper/css/navigation'
+/* import 'swiper/css'
+import 'swiper/css/navigation' ------------------------------------------------------------------ verificar si esto se debe eliminar*/
 
 /* configuración de swiper
 Aquí le decimos a Swiper qué módulos están activos en esta sección.
@@ -38,7 +39,7 @@ Aquí viven los datos reales que luego acabas viendo en pantalla.
 Cada objeto representa una tarjeta completa: título, descripción e imagen.
 Tener los datos aquí separados del HTML hace que el código sea más limpio,
 más fácil de ampliar y mucho más reutilizable.*/
-const tarjetasSuite = [
+const tarjetasSuite: TarjetaSuiteData[] = [
   {
     id: 1,
     titulo: 'Synetech Class',
@@ -167,13 +168,10 @@ const tarjetasSuite = [
                1. Los datos viven arriba, en tarjetasSuite
                2. v-for recorre ese array
                3. cada objeto actual se llama tarjeta
-               4. desde aquí mandamos sus campos como props
-               5. la hija los recibe y los pinta -->
+               4. ahora el padre manda el objeto completo
+               5. la hija recibe una sola prop y pinta sus datos sin fragmentarlos -->
           <TarjetaSuite
-            :titulo="tarjeta.titulo"
-            :descripcion="tarjeta.descripcion"
-            :imagen="tarjeta.imagen"
-            :alt="tarjeta.alt"
+            :tarjeta="tarjeta"
           />
         </SwiperSlide>
       </Swiper>
