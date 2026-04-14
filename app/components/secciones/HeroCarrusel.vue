@@ -53,9 +53,8 @@ const modulosSwiper = [Autoplay, Pagination]
         v-for="slide in diapositivas"
         :key="slide.id"
       >
-        <!-- ========================= -->
+     
         <!-- SLIDE 1 - DEMO -->
-        <!-- ========================= -->
         <div
           v-if="slide.variante === 'demo'"
           class="relative overflow-hidden bg-black text-white

@@ -2,7 +2,8 @@
   "caracteristicasIA": {
     "heading": "La pantalla interactiva con IA que está revolucionando la educación en los colegios",
     "acciones": {
-      "abrirTarjeta": "Abrir {titulo}"
+      "abrirTarjeta": "Abrir {titulo}",
+      "abrirTarjetaBase": "Abrir"
     },
     "carrusel": {
       "pausar": "Pausar carrusel",

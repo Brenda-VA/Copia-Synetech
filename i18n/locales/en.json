@@ -2,7 +2,8 @@
   "caracteristicasIA": {
     "heading": "The interactive display with AI that is transforming education in schools",
     "acciones": {
-      "abrirTarjeta": "Open {titulo}"
+      "abrirTarjeta": "Open {titulo}",
+      "abrirTarjetaBase": "Open"
     },
     "carrusel": {
       "pausar": "Pause carousel",
