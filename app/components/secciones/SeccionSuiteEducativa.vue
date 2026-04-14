@@ -25,8 +25,8 @@ import type { TarjetaSuiteData } from '~/types/tarjetas'
 /* estilos externos
 Estos imports no son lógica de Vue, sino estilos CSS que Swiper necesita
 para que el carrusel y sus controles se vean y funcionen correctamente. */
-/* import 'swiper/css'
-import 'swiper/css/navigation' ------------------------------------------------------------------ verificar si esto se debe eliminar*/
+import 'swiper/css'
+import 'swiper/css/navigation'
 
 /* configuración de swiper
 Aquí le decimos a Swiper qué módulos están activos en esta sección.
