@@ -3,51 +3,53 @@ import type { TarjetaIA } from '@/types/tarjetas'//nombre del tipo: TarjetaIA
 
 const { t } = useI18n()
 
-const tarjetasPrueba: TarjetaIA[] = [//tarjetasPrueba es un array de objetos del tipo TarjetaIA
-//cuando ya está tipado TS verifi a que cada objeto tenga los elementos del tipo, por ejemplo, id siembre será number
+/* esta pagina traduce sus propias tarjetas porque aqui el contenido es personalizado
+asi el padre reutiliza la misma estructura, pero recibe texto final y no keys */
+const tarjetasPrueba = computed<TarjetaIA[]>(() => [//tarjetasPrueba es un array de objetos del tipo TarjetaIA
+//cuando ya está tipado TS verifica que cada objeto tenga los elementos del tipo, por ejemplo, id siembre será number
 /*Antes se veia asi: 'const tarjetasPrueba = ['*/
   {
     id: 3,
     tipo: 'imagen-fondo', //marca error si ponemos un valor que no sea del tipo que especifiquemos
-    tituloKey: 'prueba.caracteristicasIA.tarjetas.recursos.titulo',
-    subtituloKey: 'prueba.caracteristicasIA.tarjetas.recursos.subtitulo',
+    titulo: t('prueba.caracteristicasIA.tarjetas.recursos.titulo'),
+    subtitulo: t('prueba.caracteristicasIA.tarjetas.recursos.subtitulo'),
     imagen: '/imagenes/subtitulos-automaticos-ia-1024w.webp',
-    altKey: 'prueba.caracteristicasIA.tarjetas.recursos.alt'
+    alt: t('prueba.caracteristicasIA.tarjetas.recursos.alt')
   },
   {
     id: 1,
     tipo: 'imagen-fondo',
-    tituloKey: 'prueba.caracteristicasIA.tarjetas.ideas.titulo',
-    subtituloKey: 'prueba.caracteristicasIA.tarjetas.ideas.subtitulo',
+    titulo: t('prueba.caracteristicasIA.tarjetas.ideas.titulo'),
+    subtitulo: t('prueba.caracteristicasIA.tarjetas.ideas.subtitulo'),
     imagen: '/imagenes/asistente-ia-1024w.webp',
-    altKey: 'prueba.caracteristicasIA.tarjetas.ideas.alt'
+    alt: t('prueba.caracteristicasIA.tarjetas.ideas.alt')
   },
   {
     id: 5,
     tipo: 'blanca',
-    tituloKey: 'prueba.caracteristicasIA.tarjetas.accesos.titulo',
-    subtituloKey: 'prueba.caracteristicasIA.tarjetas.accesos.subtitulo',
+    titulo: t('prueba.caracteristicasIA.tarjetas.accesos.titulo'),
+    subtitulo: t('prueba.caracteristicasIA.tarjetas.accesos.subtitulo'),
     imagen: '/imagenes/gestion-perfiles-usuario-1024w.webp',
-    altKey: 'prueba.caracteristicasIA.tarjetas.accesos.alt',
+    alt: t('prueba.caracteristicasIA.tarjetas.accesos.alt'),
     ancha: true
   },
   {
     id: 2,
     tipo: 'blanca',
-    tituloKey: 'prueba.caracteristicasIA.tarjetas.actividades.titulo',
-    subtituloKey: 'prueba.caracteristicasIA.tarjetas.actividades.subtitulo',
+    titulo: t('prueba.caracteristicasIA.tarjetas.actividades.titulo'),
+    subtitulo: t('prueba.caracteristicasIA.tarjetas.actividades.subtitulo'),
     imagen: '/imagenes/ia-generativa-1512w.webp',
-    altKey: 'prueba.caracteristicasIA.tarjetas.actividades.alt'
+    alt: t('prueba.caracteristicasIA.tarjetas.actividades.alt')
   },
   {
     id: 4,
     tipo: 'blanca',
-    tituloKey: 'prueba.caracteristicasIA.tarjetas.conexion.titulo',
-    subtituloKey: 'prueba.caracteristicasIA.tarjetas.conexion.subtitulo',
+    titulo: t('prueba.caracteristicasIA.tarjetas.conexion.titulo'),
+    subtitulo: t('prueba.caracteristicasIA.tarjetas.conexion.subtitulo'),
     imagen: '/imagenes/traduccion-automatica-ia-1280w.webp',
-    altKey: 'prueba.caracteristicasIA.tarjetas.conexion.alt'
+    alt: t('prueba.caracteristicasIA.tarjetas.conexion.alt')
   }
-]
+])
 </script>
 
 <template>
