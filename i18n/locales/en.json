@@ -1,0 +1,81 @@
+{
+  "caracteristicasIA": {
+    "heading": "The interactive display with AI that is transforming education in schools",
+    "acciones": {
+      "abrirTarjeta": "Open {titulo}",
+      "abrirTarjetaBase": "Open"
+    },
+    "carrusel": {
+      "pausar": "Pause carousel",
+      "reproducir": "Play carousel",
+      "indicadores": "AI features card indicators",
+      "irATarjeta": "Go to card {numero}"
+    },
+    "modal": {
+      "cerrar": "Close modal"
+    },
+    "tarjetas": {
+      "preguntale": {
+        "titulo": "Ask",
+        "subtitulo": "AI anything",
+        "alt": "Teacher using an AI assistant on an interactive display",
+        "modal": {
+          "titulo": "Training for schools",
+          "descripcion": "We provide training for educational centers on the use of interactive displays, digital tools, and artificial intelligence in the classroom."
+        }
+      },
+      "artista": {
+        "titulo": "Become an artist",
+        "subtitulo": "with generative AI",
+        "alt": "Interactive display showing AI-generated artwork"
+      },
+      "subtitulos": {
+        "titulo": "Subtitle your videos",
+        "subtitulo": "automatically",
+        "alt": "Classroom watching automatic subtitles on a display"
+      },
+      "traduccion": {
+        "titulo": "Translate audio in real time:",
+        "subtitulo": "break language barriers instantly",
+        "alt": "Display showing automatic real-time translation"
+      },
+      "perfiles": {
+        "titulo": "Guest, User, Administrator.",
+        "subtitulo": "Manage profiles simply and securely",
+        "alt": "Display with user profile management"
+      }
+    }
+  },
+  "prueba": {
+    "caracteristicasIA": {
+      "heading": "Digital resources for a more dynamic classroom",
+      "tarjetas": {
+        "recursos": {
+          "titulo": "Discover resources",
+          "subtitulo": "for every lesson",
+          "alt": "Resources for the classroom"
+        },
+        "ideas": {
+          "titulo": "Explore new ideas",
+          "subtitulo": "with visual support",
+          "alt": "Exploring new ideas"
+        },
+        "accesos": {
+          "titulo": "Organize access",
+          "subtitulo": "clearly and securely",
+          "alt": "Access organization"
+        },
+        "actividades": {
+          "titulo": "Create activities",
+          "subtitulo": "that are more creative and interactive",
+          "alt": "Creative activities"
+        },
+        "conexion": {
+          "titulo": "Connect everyone",
+          "subtitulo": "without language barriers",
+          "alt": "Connection without barriers"
+        }
+      }
+    }
+  }
+}
