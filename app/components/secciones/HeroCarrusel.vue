@@ -1,35 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import BotonPrimario from '../ui/BotonPrimario.vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, Pagination } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
+import { diapositivasHero } from '~/data/heroCarrusel'
+import type { HeroSlide } from '~/types/hero'
 
-const diapositivas = [
-  {
-    id: 1,
-    etiqueta: 'No te lo contamos.',
-    titulo: 'Prueba gratis nuestras pantallas interactivas.',
-    boton: 'Descubre más',
-    imagenMovil: '/imagenes/banner_demo.webp',
-    imagenTablet: '/imagenes/banner_demo_1024w.webp',
-    imagenDesktop: '/imagenes/banner_demo_1024w.webp',
-    alt: 'Pantalla interactiva Synetech con iconos flotando',
-    variante: 'demo'
-  },
-  {
-    id: 2,
-    etiqueta: 'La pizarra digital interactiva con Inteligencia Artificial',
-    titulo: 'SYNETECH IA',
-    boton: 'Descubre más',
-    imagenMovil: '/imagenes/banner-ia-576w.webp',
-    imagenTablet: '/imagenes/banner-ia-1280w.webp',
-    imagenDesktop: '/imagenes/banner-ia-1920w.webp',
-    alt: 'Imagen promocional de Synetech IA',
-    variante: 'ia'
-  }
-]
+// antes este archivo mezclaba data y render en el mismo sitio
+// ahora las diapositivas salen de /data y aqui se queda la parte de swiper + layout
+// i18n todavia no entra para no mezclar dos refactors a la vez
+const diapositivas: HeroSlide[] = diapositivasHero
 
+// variante sigue existiendo porque demo e ia no comparten el mismo layout real
+// aqui no conviene forzarlos a una sola estructura solo por "limpiar"
 const modulosSwiper = [Autoplay, Pagination]
 </script>
 
