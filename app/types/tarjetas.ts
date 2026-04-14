@@ -5,10 +5,10 @@ export type TarjetaFormato = 'estandar' | 'ancha'
 export interface TarjetaIA {
   id: number
   tipo: TarjetaIATipo
-  tituloKey: string
-  subtituloKey: string
+  titulo: string
+  subtitulo: string
   imagen: string
-  altKey: string
+  alt: string
   ancha?: boolean //propiedad opcional, por eso tiene el '?', algunas tarjetas la tienen, otras no
   modal?: TarjetaModalIA
 }
@@ -16,6 +16,6 @@ export interface TarjetaIA {
 /* el boton de las tarjetas que tengan la propiedad modal ya no servirá para navegar, si no que emitirá un evento para abrir un modal en cuanto sea pulsado
 se debe usar tanto en seccion como en carrusel, en este ultimo caso, como carrusel contiene la tarjeta, tiene que escuchar ese evento y reenviarlo al padre */
 export interface TarjetaModalIA {
-  tituloKey: string
-  descripcionKey: string
+  titulo: string
+  descripcion: string
 }
