@@ -1,110 +1,49 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch, onBeforeUnmount, computed } from 'vue'
+import { enlacesNavbar } from '~/data/navbarEnlaces'
+import type {
+  NavbarItem,
+  NavbarDropdownItem,
+  NavbarIdiomaItem
+} from '~/types/navbar'
 
 // estado
 // aquí guardamos qué cosas están abiertas o cerradas
-const menuAbierto = ref(false)
-const menuActivo = ref(null)
-const submenuMovilActivo = ref(null)
+// en esta fase solo ordenamos el shape y los estados, i18n vendra despues
+const menuAbierto = ref<boolean>(false)
+const menuActivo = ref<string | null>(null)
+const submenuMovilActivo = ref<string | null>(null)
 
 // datos del navbar
 /* en vez de escribir los links uno por uno en el template, se guardan aquí como datos en arrays y luego se pintan con v-for 
 además ahora hay una sola fuente para escritorio y móvil.
-cada item decide si es link, dropdown o idioma y si tiene desplegable, también guarda aquí sus bloques internos */
-const enlacesNavbar = [
-  {
-    id: 1,
-    texto: 'Pantallas Interactivas',
-    href: '#',
-    tipo: 'dropdown',
-    clave: 'pantallas',
-    maxWidth: 'max-w-[860px]',
-    bloques: [
-      {
-        titulo: 'Pantallas Interactivas',
-        estilo: 'destacado',
-        links: ['Piscis', 'Taurus', 'Gemini']
-      },
-      {
-        titulo: 'Software Educativo',
-        estilo: 'destacado',
-        links: ['Synetech Class', 'Synetech OS', 'Synetech DMS', 'Synetech Share']
-      },
-      {
-        titulo: 'Inteligencia Artificial',
-        estilo: 'destacado',
-        links: ['Synetech IA']
-      }
-    ]
-  },
-  {
-    id: 2,
-    texto: 'Pantallas LED',
-    href: '#',
-    tipo: 'link'
-  },
-  {
-    id: 3,
-    texto: 'Soporte',
-    href: '#',
-    tipo: 'dropdown',
-    clave: 'soporte',
-    maxWidth: 'max-w-[860px]',
-    bloques: [
-      {
-        titulo: 'Descargas',
-        estilo: 'normal',
-        links: ['Pantallas Interactivas']
-      },
-      {
-        titulo: 'Te ayudamos',
-        estilo: 'normal',
-        links: ['Contacta con soporte', 'Reparación de pantallas LED']
-      },
-      {
-        titulo: 'Información adicional',
-        estilo: 'normal',
-        links: ['Garantía', 'Comprueba la cobertura']
-      }
-    ]
-  },
-  {
-    id: 4,
-    texto: 'EdBlog',
-    href: '#',
-    tipo: 'link'
-  },
-  {
-    id: 5,
-    texto: 'Solicita una Demo',
-    href: '#',
-    tipo: 'link'
-  },
-  {
-    id: 6,
-    texto: 'Idioma',
-    tipo: 'idioma',
-    clave: 'idioma',
-    maxWidth: 'max-w-[280px]',
-    bloques: [
-      {
-        titulo: 'Elige tu idioma',
-        estilo: 'normal',
-        links: ['Español', 'English', 'Deutsch']
-      }
-    ]
-  }
-]
+cada item decide si es link, dropdown o idioma y si tiene desplegable, también guarda aquí sus bloques internos
+ahora los datos vienen de app/data/navbar.ts
+esta fase solo separa datos y lógica para dejar el archivo mas claro
+i18n vendra despues, cuando ya no haya que tocar dos refactors a la vez */
+
+// helpers de tipo
+// link, dropdown e idioma no tienen el mismo shape
+// por eso tipo manda que propiedades puedo usar en cada caso
+function tieneDesplegable(enlace: NavbarItem): enlace is NavbarDropdownItem | NavbarIdiomaItem {
+  return enlace.tipo !== 'link'
+}
+
+function obtenerLinksIdioma(enlace: NavbarItem): string[] {
+  return enlace.tipo === 'idioma' ? enlace.bloques[0]?.links ?? [] : []
+}
 
 // computed
 /* aquí saco el dropdown activo de escritorio a partir del mismo array.
 así ya no necesito otro objeto separado solo para escritorio. */
-const dropdownActivoEscritorio = computed(() => {
+const dropdownActivoEscritorio = computed<NavbarDropdownItem | NavbarIdiomaItem | null>(() => {
   if (!menuActivo.value) {
     return null
   }
 
-  return enlacesNavbar.find((enlace) => enlace.clave === menuActivo.value) ?? null
+  return enlacesNavbar.find((enlace): enlace is NavbarDropdownItem | NavbarIdiomaItem => {
+    return tieneDesplegable(enlace) && enlace.clave === menuActivo.value
+  }) ?? null
 })
 
 // funciones de control
@@ -121,7 +60,7 @@ function cerrarMenu() {
   submenuMovilActivo.value = null
 }
 
-function abrirDropdown(nombre) {
+function abrirDropdown(nombre: string) {
   menuActivo.value = nombre
 }
 
@@ -129,8 +68,14 @@ function cerrarDropdown() {
   menuActivo.value = null
 }
 
-function alternarSubmenuMovil(nombre) {
+function alternarSubmenuMovil(nombre: string) {
   submenuMovilActivo.value = submenuMovilActivo.value === nombre ? null : nombre
+}
+
+function manejarMouseEnter(enlace: NavbarItem) {
+  if (tieneDesplegable(enlace)) {
+    abrirDropdown(enlace.clave)
+  }
 }
 
 // bloqueo del scroll del body cuando el menú móvil está abierto
@@ -148,6 +93,7 @@ onBeforeUnmount(() => {
     document.body.style.overflow = ''
   }
 })
+
 </script>
 
 <template>
@@ -175,7 +121,7 @@ onBeforeUnmount(() => {
           v-for="enlace in enlacesNavbar"
           :key="enlace.id"
           class="relative"
-          @mouseenter="enlace.clave ? abrirDropdown(enlace.clave) : null"
+          @mouseenter="manejarMouseEnter(enlace)"
         >
           <!-- link normal -->
           <a
@@ -453,7 +399,7 @@ onBeforeUnmount(() => {
                           <div class="px-0 py-[2px]">
                             <ul class="flex flex-col gap-2">
                               <li
-                                v-for="link in enlace.bloques[0].links"
+                                v-for="link in obtenerLinksIdioma(enlace)"
                                 :key="link"
                               >
                                 <a
