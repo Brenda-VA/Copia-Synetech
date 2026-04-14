@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, onBeforeUnmount, computed } from 'vue'
+import { enlacesNavbar } from '~/data/navbarEnlaces'
 import type {
   NavbarItem,
   NavbarDropdownItem,
@@ -17,91 +18,9 @@ const submenuMovilActivo = ref<string | null>(null)
 /* en vez de escribir los links uno por uno en el template, se guardan aquí como datos en arrays y luego se pintan con v-for 
 además ahora hay una sola fuente para escritorio y móvil.
 cada item decide si es link, dropdown o idioma y si tiene desplegable, también guarda aquí sus bloques internos
-en esta fase sigue dentro del SFC para no mezclar tipado e i18n con mover datos fuera */
-const enlacesNavbar: NavbarItem[] = [
-  {
-    id: 1,
-    texto: 'Pantallas Interactivas',
-    href: '#',
-    tipo: 'dropdown',
-    clave: 'pantallas',
-    maxWidth: 'max-w-[860px]',
-    bloques: [
-      {
-        titulo: 'Pantallas Interactivas',
-        estilo: 'destacado',
-        links: ['Piscis', 'Taurus', 'Gemini']
-      },
-      {
-        titulo: 'Software Educativo',
-        estilo: 'destacado',
-        links: ['Synetech Class', 'Synetech OS', 'Synetech DMS', 'Synetech Share']
-      },
-      {
-        titulo: 'Inteligencia Artificial',
-        estilo: 'destacado',
-        links: ['Synetech IA']
-      }
-    ]
-  },
-  {
-    id: 2,
-    texto: 'Pantallas LED',
-    href: '#',
-    tipo: 'link'
-  },
-  {
-    id: 3,
-    texto: 'Soporte',
-    href: '#',
-    tipo: 'dropdown',
-    clave: 'soporte',
-    maxWidth: 'max-w-[860px]',
-    bloques: [
-      {
-        titulo: 'Descargas',
-        estilo: 'normal',
-        links: ['Pantallas Interactivas']
-      },
-      {
-        titulo: 'Te ayudamos',
-        estilo: 'normal',
-        links: ['Contacta con soporte', 'Reparación de pantallas LED']
-      },
-      {
-        titulo: 'Información adicional',
-        estilo: 'normal',
-        links: ['Garantía', 'Comprueba la cobertura']
-      }
-    ]
-  },
-  {
-    id: 4,
-    texto: 'EdBlog',
-    href: '#',
-    tipo: 'link'
-  },
-  {
-    id: 5,
-    texto: 'Solicita una Demo',
-    href: '#',
-    tipo: 'link'
-  },
-  {
-    id: 6,
-    texto: 'Idioma',
-    tipo: 'idioma',
-    clave: 'idioma',
-    maxWidth: 'max-w-[280px]',
-    bloques: [
-      {
-        titulo: 'Elige tu idioma',
-        estilo: 'normal',
-        links: ['Español', 'English', 'Deutsch']
-      }
-    ]
-  }
-]
+ahora los datos vienen de app/data/navbar.ts
+esta fase solo separa datos y lógica para dejar el archivo mas claro
+i18n vendra despues, cuando ya no haya que tocar dos refactors a la vez */
 
 // helpers de tipo
 // link, dropdown e idioma no tienen el mismo shape
