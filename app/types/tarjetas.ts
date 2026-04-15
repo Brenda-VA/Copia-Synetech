@@ -2,12 +2,23 @@ export type TarjetaIATipo = 'imagen-fondo' | 'blanca'//union de literales, el va
 export type TarjetaVista = 'movil' | 'tablet' | 'desktop'//solo acepta alguna de las 3 vistaa
 export type TarjetaFormato = 'estandar' | 'ancha'
 
+/* Antes la propiedad de imagenes usaba un solo tipo pq solo usaba una imagen para cada tarjeta, como
+ahora se van a usar varias img según el tamaño de pantalla, dicha propiedad debe tener varios tipos para especificar
+que img se va a usar.
+
+Ahora cada tarjeta tiene sus 3 versiones de imagenes en 1 solo bloque*/
+export interface TarjetaIAImagenes {
+  movil: string
+  tablet: string
+  desktop: string
+}
+
 export interface TarjetaIA {
   id: number
   tipo: TarjetaIATipo
   titulo: string
   subtitulo: string
-  imagen: string
+  imagenes: TarjetaIAImagenes
   alt: string
   ancha?: boolean //propiedad opcional, por eso tiene el '?', algunas tarjetas la tienen, otras no
   modal?: TarjetaModalIA
