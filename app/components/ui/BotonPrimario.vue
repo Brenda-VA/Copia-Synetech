@@ -5,6 +5,9 @@ defineProps({
     default: 'Descubre más'
   }
 })
+/** 2DO CAMBIO DESDE B1 - WSDFNGMCNVRMJE,WLMCKETHMTHCKTHLRCRT
+ * ERH4H54H
+ */
 </script>
 
 <template>
