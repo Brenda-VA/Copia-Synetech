@@ -8,13 +8,18 @@ asi los hijos no necesitan saber nada de i18n y solo reciben texto ya listo */
 /*ESTA FUNCION:
 Recibe (t) y traduce las claves (itulo: t('caracteristicasIA.tarjetas.preguntale.titulo')). a texto traducido como 'Preguntale  */
 export function crearTarjetasIA(t: (key: string) => string): TarjetaIA[] {
+  /*se actualizan las rutas porque laas imagenes ya se movieron a subcarpetas nuevas y se habian roto las rutas debido a este cambio*/
   return [
     {
       id: 1,
       tipo: 'imagen-fondo',
       titulo: t('caracteristicasIA.tarjetas.preguntale.titulo'),
       subtitulo: t('caracteristicasIA.tarjetas.preguntale.subtitulo'),
-      imagen: '/imagenes/asistente-ia-1024w.webp',
+      imagenes: {//ahora ya se usan rutas mas ordenadas y encima con 3 tamaños a elegir segun la pantalla
+        movil: '/imagenes/caracteristicas-ia/asistente-ia/asistente-ia-576w.webp',
+        tablet: '/imagenes/caracteristicas-ia/asistente-ia/asistente-ia-1024w.webp',
+        desktop: '/imagenes/caracteristicas-ia/asistente-ia/asistente-ia-1280w.webp'
+      },
       alt: t('caracteristicasIA.tarjetas.preguntale.alt'),
       modal: {
         titulo: t('caracteristicasIA.tarjetas.preguntale.modal.titulo'),
@@ -26,7 +31,11 @@ export function crearTarjetasIA(t: (key: string) => string): TarjetaIA[] {
       tipo: 'blanca',
       titulo: t('caracteristicasIA.tarjetas.artista.titulo'),
       subtitulo: t('caracteristicasIA.tarjetas.artista.subtitulo'),
-      imagen: '/imagenes/ia-generativa-1512w.webp',
+      imagenes: {//lo mismo aqui y en el resto de tarjetas
+        movil: '/imagenes/caracteristicas-ia/ia-generativa/ia-generativa-576w.webp',
+        tablet: '/imagenes/caracteristicas-ia/ia-generativa/ia-generativa-1024w.webp',
+        desktop: '/imagenes/caracteristicas-ia/ia-generativa/ia-generativa-1280w.webp'
+      },
       alt: t('caracteristicasIA.tarjetas.artista.alt')
     },
     {
@@ -34,7 +43,11 @@ export function crearTarjetasIA(t: (key: string) => string): TarjetaIA[] {
       tipo: 'imagen-fondo',
       titulo: t('caracteristicasIA.tarjetas.subtitulos.titulo'),
       subtitulo: t('caracteristicasIA.tarjetas.subtitulos.subtitulo'),
-      imagen: '/imagenes/subtitulos-automaticos-ia-1024w.webp',
+      imagenes: {
+        movil: '/imagenes/caracteristicas-ia/subtitulos-automaticos-ia/subtitulos-automaticos-ia-576w.webp',
+        tablet: '/imagenes/caracteristicas-ia/subtitulos-automaticos-ia/subtitulos-automaticos-ia-1024w.webp',
+        desktop: '/imagenes/caracteristicas-ia/subtitulos-automaticos-ia/subtitulos-automaticos-ia-1280w.webp'
+      },
       alt: t('caracteristicasIA.tarjetas.subtitulos.alt')
     },
     {
@@ -42,7 +55,11 @@ export function crearTarjetasIA(t: (key: string) => string): TarjetaIA[] {
       tipo: 'blanca',
       titulo: t('caracteristicasIA.tarjetas.traduccion.titulo'),
       subtitulo: t('caracteristicasIA.tarjetas.traduccion.subtitulo'),
-      imagen: '/imagenes/traduccion-automatica-ia-1280w.webp',
+      imagenes: {
+        movil: '/imagenes/caracteristicas-ia/traduccion-automatica-ia/traduccion-automatica-ia-768w.webp',
+        tablet: '/imagenes/caracteristicas-ia/traduccion-automatica-ia/traduccion-automatica-ia-1280w.webp',
+        desktop: '/imagenes/caracteristicas-ia/traduccion-automatica-ia/traduccion-automatica-ia-1512w.webp'
+      },
       alt: t('caracteristicasIA.tarjetas.traduccion.alt'),
       ancha: false
     },
@@ -51,7 +68,11 @@ export function crearTarjetasIA(t: (key: string) => string): TarjetaIA[] {
       tipo: 'blanca',
       titulo: t('caracteristicasIA.tarjetas.perfiles.titulo'),
       subtitulo: t('caracteristicasIA.tarjetas.perfiles.subtitulo'),
-      imagen: '/imagenes/gestion-perfiles-usuario-1024w.webp',
+      imagenes: {
+        movil: '/imagenes/caracteristicas-ia/gestion-perfiles-usuario/gestion-perfiles-usuario-576w.webp',
+        tablet: '/imagenes/caracteristicas-ia/gestion-perfiles-usuario/gestion-perfiles-usuario-1024w.webp',
+        desktop: '/imagenes/caracteristicas-ia/gestion-perfiles-usuario/gestion-perfiles-usuario-1280w.webp'
+      },
       alt: t('caracteristicasIA.tarjetas.perfiles.alt'),
       ancha: true
     }

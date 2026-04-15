@@ -79,14 +79,27 @@ const ariaLabelBoton = computed(() => `${props.abrirTarjetaLabel} ${props.tarjet
         ? 'tarjeta-ia-movil__media--cover'
         : 'tarjeta-ia-movil__media--soft'"
     >
-      <img
-        :src="props.tarjeta.imagen"
-        :alt="props.tarjeta.alt"
-        class="tarjeta-ia-movil__imagen"
-        :class="esImagenFondo
-          ? 'tarjeta-ia-movil__imagen--cover'
-          : 'tarjeta-ia-movil__imagen--contain'"
-      >
+      <!-- este componente es el q pinta la imagen y
+       por eso picture/srcset entra aqui y no en el padre -->
+      <picture class="tarjeta-ia-movil__imagen">
+        <source
+          media="(min-width: 1280px)"
+          :srcset="props.tarjeta.imagenes.desktop"
+        >
+        <source
+          media="(min-width: 768px)"
+          :srcset="props.tarjeta.imagenes.tablet"
+        >
+        <!-- el img final se queda como fallback movil -->
+        <img
+          :src="props.tarjeta.imagenes.movil"
+          :alt="props.tarjeta.alt"
+          class="tarjeta-ia-movil__imagen"
+          :class="esImagenFondo
+            ? 'tarjeta-ia-movil__imagen--cover'
+            : 'tarjeta-ia-movil__imagen--contain'"
+        >
+      </picture>
     </div>
   </article>
 
@@ -109,11 +122,21 @@ const ariaLabelBoton = computed(() => `${props.abrirTarjetaLabel} ${props.tarjet
       </div>
 
       <div class="overflow-hidden rounded-[1.65rem] bg-white">
-        <img
-          :src="props.tarjeta.imagen"
-          :alt="props.tarjeta.alt"
-          class="h-full w-full object-cover"
-        >
+        <picture class="block h-full w-full">
+          <source
+            media="(min-width: 1280px)"
+            :srcset="props.tarjeta.imagenes.desktop"
+          >
+          <source
+            media="(min-width: 768px)"
+            :srcset="props.tarjeta.imagenes.tablet"
+          >
+          <img
+            :src="props.tarjeta.imagenes.movil"
+            :alt="props.tarjeta.alt"
+            class="h-full w-full object-cover"
+          >
+        </picture>
       </div>
     </div>
 
@@ -139,11 +162,23 @@ const ariaLabelBoton = computed(() => `${props.abrirTarjetaLabel} ${props.tarjet
       ? 'min-h-[340px] bg-white'
       : 'min-h-[430px] bg-white md:min-h-[460px]'"
   >
-    <img
-      :src="props.tarjeta.imagen"
-      :alt="props.tarjeta.alt"
-      class="absolute inset-0 h-full w-full object-cover"
-    >
+    <!-- las rutas cambian porque los assets se movieron a subcarpetas
+    y aqui ya aprovechamos 3 tamaños sin meter una solucion mas compleja -->
+    <picture>
+      <source
+        media="(min-width: 1280px)"
+        :srcset="props.tarjeta.imagenes.desktop"
+      >
+      <source
+        media="(min-width: 768px)"
+        :srcset="props.tarjeta.imagenes.tablet"
+      >
+      <img
+        :src="props.tarjeta.imagenes.movil"
+        :alt="props.tarjeta.alt"
+        class="absolute inset-0 h-full w-full object-cover"
+      >
+    </picture>
 
     <div class="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent"></div>
 
@@ -206,11 +241,23 @@ const ariaLabelBoton = computed(() => `${props.abrirTarjetaLabel} ${props.tarjet
 
     <div :class="esTablet ? 'mt-4 flex-1' : 'mt-4'">
       <div :class="esTablet ? 'h-full overflow-hidden rounded-[1.65rem] bg-white' : 'overflow-hidden rounded-[1.65rem] bg-white'">
-        <img
-          :src="props.tarjeta.imagen"
-          :alt="props.tarjeta.alt"
-          :class="esTablet ? 'h-full w-full object-cover' : 'w-full object-cover'"
-        >
+        <!-- esta fase solo se aplica a la seccion IA
+        asi arreglamos las rutas nuevas y el responsive sin mezclar otras secciones ahora -->
+        <picture class="block h-full w-full">
+          <source
+            media="(min-width: 1280px)"
+            :srcset="props.tarjeta.imagenes.desktop"
+          >
+          <source
+            media="(min-width: 768px)"
+            :srcset="props.tarjeta.imagenes.tablet"
+          >
+          <img
+            :src="props.tarjeta.imagenes.movil"
+            :alt="props.tarjeta.alt"
+            :class="esTablet ? 'h-full w-full object-cover' : 'w-full object-cover'"
+          >
+        </picture>
       </div>
     </div>
 
