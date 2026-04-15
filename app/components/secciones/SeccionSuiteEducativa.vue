@@ -1,4 +1,13 @@
 <script setup lang="ts">
+
+/*COMENTARO DE PRACTICA DESDE RAMA B  
+dwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoew
+dwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoew
+dwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoew
+dwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoew
+dwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoew
+dwefmklrnm,ñwelmcrnkhtuimoewdwefmklrnm,ñwelmcrnkhtuimoew*/
+
 /*script setup
 En Vue, <script setup> es una forma corta y muy cómoda de escribir componentes.
 Todo lo que se declare aquí queda disponible directamente en el template,
