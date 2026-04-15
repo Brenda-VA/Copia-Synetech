@@ -82,11 +82,25 @@ const tarjetasSuite: TarjetaSuiteData[] = [
          imagen de fondo, capa de oscurecido y textos principales.
          Aquí Tailwind se encarga sobre todo del aspecto visual. -->
     <div class="relative overflow-hidden">
-      <img
-        src="/imagenes/software-educativo-1280w.webp"
-        alt="Suite educativa Synetech"
-        class="absolute inset-0 h-full w-full object-cover"
-      >
+      <!-- en esta fase solo se arregla la imagen de fondo principal
+      las tarjetas no se tocan porque no tienen varias resoluciones preparadas -->
+      <!-- aqui si usamos picture/srcset porque esta imagen si tiene varias versiones
+      y ademas la ruta cambia porque el asset ahora vive dentro de /imagenes/software-educativo -->
+      <picture>
+        <source
+          media="(min-width: 1280px)"
+          srcset="/imagenes/software-educativo/software-educativo-1920w.webp"
+        >
+        <source
+          media="(min-width: 768px)"
+          srcset="/imagenes/software-educativo/software-educativo-1024w.webp"
+        >
+        <img
+          src="/imagenes/software-educativo/software-educativo-576w.webp"
+          alt="Suite educativa Synetech"
+          class="absolute inset-0 h-full w-full object-cover"
+        >
+      </picture>
 
       <!-- apoyo visual -->
       <!-- Esta capa no tiene lógica de Vue.
