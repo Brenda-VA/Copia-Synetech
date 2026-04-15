@@ -1,4 +1,13 @@
 <script setup lang="ts">
+
+/* COMENTARIO CREADO DESDE RAMA B1 PARA GENERAR CONFLICTOS
+lmwecrknuetemx,wercgknehimxw,qxemrginuchm4xoe, lmwecrknuetemx,wercgknehimxw,qxemrginuchm4xoe,
+lmwecrknuetemx,wercgknehimxw,qxemrginuchm4xoe,
+lmwecrknuetemx,wercgknehimxw,qxemrginuchm4xoe,lmwecrknuetemx,wercgknehimxw,qxemrginuchm4xoe,
+lmwecrknuetemx,wercgknehimxw,qxemrginuchm4xoe,lmwecrknuetemx,wercgknehimxw,qxemrginuchm4xoe,lmwecrknuetemx,wercgknehimxw,qxemrginuchm4xoe,lmwecrknuetemx,wercgknehimxw,qxemrginuchm4xoe,
+lmwecrknuetemx,wercgknehimxw,qxemrginuchm4xoe,*/
+
+
 import BotonPrimario from '../ui/BotonPrimario.vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, Pagination } from 'swiper/modules'
