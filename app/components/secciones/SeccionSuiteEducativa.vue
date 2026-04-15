@@ -1,4 +1,9 @@
 <script setup lang="ts">
+
+/* COMENTARIO DE PRUEBA PARA PRACTICAR RESOLVER CONFLICTOS */
+
+
+
 /*script setup
 En Vue, <script setup> es una forma corta y muy cómoda de escribir componentes.
 Todo lo que se declare aquí queda disponible directamente en el template,
