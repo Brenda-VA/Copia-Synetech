@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { TarjetaIA } from '@/types/tarjetas'//nombre del tipo: TarjetaIA
+import BotonPrimario from '~/components/ui/BotonPrimario.vue';//importamos el boton pa probar los slots
 
 const { t } = useI18n()
 
 /* esta pagina traduce sus propias tarjetas porque aqui el contenido es personalizado
 asi el padre reutiliza la misma estructura, pero recibe texto final y no keys */
 const tarjetasPrueba = computed<TarjetaIA[]>(() => [//tarjetasPrueba es un array de objetos del tipo TarjetaIA
-//cuando ya está tipado TS verifica que cada objeto tenga los elementos del tipo, por ejemplo, id siembre será number
-/*Antes se veia asi: 'const tarjetasPrueba = ['*/
+  //cuando ya está tipado TS verifica que cada objeto tenga los elementos del tipo, por ejemplo, id siembre será number
+  /*Antes se veia asi: 'const tarjetasPrueba = ['*/
   {
     id: 3,
     tipo: 'imagen-fondo', //marca error si ponemos un valor que no sea del tipo que especifiquemos
@@ -75,10 +76,43 @@ const tarjetasPrueba = computed<TarjetaIA[]>(() => [//tarjetasPrueba es un array
 
 <template>
   <main class="min-h-screen bg-[#ececec]">
-    <SeccionesSeccionCaracteristicasIA
-      :titulo="t('prueba.caracteristicasIA.heading')"
-      :tarjetas="tarjetasPrueba"
-      ruta-flechas="/"
-    />
+<!-- dese aqui con <template> personalizamos el slot de HeroCarrusel, modificamos el textopara los botones de ambos slides -->
+    <!-- SCOPED SLOT -->
+    <SeccionesHeroCarrusel>
+      
+      <template #boton="{ slide }">
+        <BotonPrimario>
+          <span class="inline-flex items-center gap-2">
+            {{ slide.variante == 'demo' ? 'Probar demo desde slot en prueba.vue' : 'Explorar IA desde slot en prueba.vue' }}
+            <span aria-hidden="true">→</span>
+          </span>
+        </BotonPrimario>
+      </template>
+    </SeccionesHeroCarrusel>
+
+
+    <!-- DEFAULT SLOT
+    personalizando con el slot que está en BotonPrimario.vue -->
+    <section class="bg-black px-6 py-10 text-center">
+      <!-- traemos el componente -->
+      <BotonPrimario>
+        <!-- escribimos el nuevo contenido, si no le pasamos nd a partir de aqui entonces agarra el
+         texto por defecto-->
+        <span class="inline-flex items-center gap-2">
+          Probar a personalizar botón desde slot que viene directamente de BotonPrimario
+          <span aria-hidden="true">→</span>
+        </span>
+      </BotonPrimario>
+    </section>
+
+
+    <SeccionesSeccionCaracteristicasIA :tarjetas="tarjetasPrueba" ruta-flechas="/">
+      <template #titulo>
+        Recursos digitales<br>
+        <span class="text-black/45">
+          para una clase más dinámica
+        </span>
+      </template>
+    </SeccionesSeccionCaracteristicasIA>
   </main>
 </template>

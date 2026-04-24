@@ -19,131 +19,99 @@ const modulosSwiper = [Autoplay, Pagination]
 
 <template>
   <section class="overflow-hidden border-b border-white/10 bg-black">
-    <Swiper
-      :modules="modulosSwiper"
-      :slides-per-view="1"
-      :loop="true"
-      :speed="900"
-      :autoplay="{
-        delay: 5000,
-        disableOnInteraction: false
-      }"
-      :pagination="{
-        clickable: true
-      }"
-      class="hero-swiper"
-    >
-      <SwiperSlide
-        v-for="slide in diapositivas"
-        :key="slide.id"
-      >
-     
+    <Swiper :modules="modulosSwiper" :slides-per-view="1" :loop="true" :speed="900" :autoplay="{
+      delay: 5000,
+      disableOnInteraction: false
+    }" :pagination="{
+      clickable: true
+    }" class="hero-swiper">
+      <SwiperSlide v-for="slide in diapositivas" :key="slide.id">
+
         <!-- SLIDE 1 - DEMO -->
-        <div
-          v-if="slide.variante === 'demo'"
-          class="relative overflow-hidden bg-black text-white
+        <div v-if="slide.variante === 'demo'" class="relative overflow-hidden bg-black text-white
                  h-[610px]
                  sm:h-[660px]
                  md:h-[700px]
                  lg:h-[760px]
-                 xl:h-[780px]"
-        >
+                 xl:h-[780px]">
           <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(53,53,53,0.24),transparent_45%)]" />
 
           <!-- Contenido -->
-          <div
-            class="relative z-10 mx-auto flex h-full w-full max-w-[1400px] flex-col items-center text-center
+          <div class="relative z-10 mx-auto flex h-full w-full max-w-[1400px] flex-col items-center text-center
                    px-5 pt-10 pb-[245px]
                    sm:px-6 sm:pt-12 sm:pb-[275px]
                    md:px-8 md:pt-14 md:pb-[315px]
                    lg:px-10 lg:pt-16 lg:pb-[350px]
-                   xl:pt-16 xl:pb-[380px]"
-          >
-            <p
-              class="max-w-[320px] font-semibold tracking-tight
+                   xl:pt-16 xl:pb-[380px]">
+            <p class="max-w-[320px] font-semibold tracking-tight
                      text-[1.95rem] leading-[1.05]
                      sm:max-w-[420px] sm:text-[2.35rem]
                      md:max-w-[620px] md:text-[2.85rem]
                      lg:max-w-[820px] lg:text-[3.4rem]
-                     xl:max-w-[960px] xl:text-[4rem]"
-            >
+                     xl:max-w-[960px] xl:text-[4rem]">
               <span class="bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
                 {{ slide.etiqueta }}
               </span>
             </p>
 
-            <h1
-              class="mt-4 max-w-[330px] font-medium leading-[1.12]
+            <h1 class="mt-4 max-w-[330px] font-medium leading-[1.12]
                      text-[1.05rem]
                      sm:max-w-[430px] sm:text-[1.7rem]
                      md:max-w-[700px] md:text-[2.5rem]
                      lg:max-w-[860px] lg:text-[3.3rem]
-                     xl:max-w-[920px] xl:text-[4.3rem] xl:leading-[1.07]"
-            >
+                     xl:max-w-[920px] xl:text-[4.3rem] xl:leading-[1.07]">
               {{ slide.titulo }}
             </h1>
 
             <div class="mt-7 sm:mt-8 md:mt-8 lg:mt-9 xl:mt-10">
-              <BotonPrimario :texto="slide.boton" />
+
+              <!--  name="boton"->  El slot tiene nombre 
+                    :slide="slide" -> indica que le pasa datos al padre
+              y el contenido de dentro del slot es el fallback(por defecto)
+              -->
+              <slot name="boton" :slide="slide">
+                <BotonPrimario>
+                  {{ slide.boton }}
+                </BotonPrimario>
+              </slot>
+
+
             </div>
           </div>
 
           <!-- Imagen inferior -->
           <div class="pointer-events-none absolute inset-x-0 bottom-0 z-0 flex justify-center">
             <picture>
-              <source
-                media="(min-width: 1024px)"
-                :srcset="slide.imagenDesktop"
-              >
-              <source
-                media="(min-width: 768px)"
-                :srcset="slide.imagenTablet"
-              >
-              <img
-                :src="slide.imagenMovil"
-                :alt="slide.alt"
-                class="block
+              <source media="(min-width: 1024px)" :srcset="slide.imagenDesktop">
+              <source media="(min-width: 768px)" :srcset="slide.imagenTablet">
+              <img :src="slide.imagenMovil" :alt="slide.alt" class="block
                        w-[112%] max-w-none translate-y-[10%]
                        sm:w-[103%] sm:translate-y-[12%]
                        md:w-[96vw] md:max-w-[980px] md:translate-y-[16%]
                        lg:w-[94vw] lg:max-w-[1200px] lg:translate-y-[18%]
                        xl:w-[95vw] xl:max-w-[1400px] xl:translate-y-[22%]
-                       object-contain"
-              >
+                       object-contain">
             </picture>
           </div>
         </div>
 
         <!-- SLIDE 2 - IA -->
-        <div
-          v-else
-          class="relative overflow-hidden text-white
+        <div v-else class="relative overflow-hidden text-white
                  h-[610px]
                  sm:h-[660px]
                  md:h-[700px]
                  lg:h-[760px]
                  xl:h-[780px]
-                 bg-[#2f2f31]"
-        >
+                 bg-[#2f2f31]">
           <!-- Fondo base -->
           <div class="absolute inset-0 bg-[linear-gradient(180deg,#333336_0%,#2b2b2e_100%)]" />
 
           <!-- Imagen principal -->
           <div class="absolute inset-0 z-0">
             <picture>
-              <source
-                media="(min-width: 1280px)"
-                :srcset="slide.imagenDesktop"
-              >
-              <source
-                media="(min-width: 768px)"
-                :srcset="slide.imagenTablet"
-              >
-              <img
-                :src="slide.imagenMovil"
-                :alt="slide.alt"
-                class="h-full w-full object-cover object-center"
-              >
+              <source media="(min-width: 1280px)" :srcset="slide.imagenDesktop">
+              <source media="(min-width: 768px)" :srcset="slide.imagenTablet">
+              <img :src="slide.imagenMovil" :alt="slide.alt" class="h-full w-full object-cover object-center">
             </picture>
           </div>
 
@@ -151,45 +119,45 @@ const modulosSwiper = [Autoplay, Pagination]
           <div
             class="absolute inset-0 z-[1]
                    bg-[linear-gradient(180deg,rgba(25,25,27,0.18)_0%,rgba(25,25,27,0.26)_35%,rgba(31,31,34,0.58)_100%)]
-                   md:bg-[linear-gradient(180deg,rgba(25,25,27,0.08)_0%,rgba(25,25,27,0.16)_36%,rgba(31,31,34,0.52)_100%)]"
-          />
+                   md:bg-[linear-gradient(180deg,rgba(25,25,27,0.08)_0%,rgba(25,25,27,0.16)_36%,rgba(31,31,34,0.52)_100%)]" />
 
           <!-- Bloque de texto: móvil -->
-          <div
-            class="absolute inset-x-0 z-10 px-5 text-center
+          <div class="absolute inset-x-0 z-10 px-5 text-center
                    top-[45%] -translate-y-1/2
                    sm:px-6 sm:top-[47%]
-                   md:hidden"
-          >
+                   md:hidden">
             <div class="mx-auto max-w-[330px]">
-              <p
-                class="text-white font-medium
+              <p class="text-white font-medium
                        text-[2.02rem] leading-[1.12]
-                       sm:text-[1.18rem]"
-              >
+                       sm:text-[1.18rem]">
                 {{ slide.etiqueta }}
               </p>
 
-              <h2
-                class="mt-4 font-semibold text-white
+              <h2 class="mt-4 font-semibold text-white
                        text-[1.35rem] leading-none tracking-[.03em]
-                       sm:text-[1.7rem]"
-              >
+                       sm:text-[1.7rem]">
                 {{ slide.titulo }}
               </h2>
 
               <div class="mt-7">
-                <BotonPrimario :texto="slide.boton" />
+
+
+                <slot name="boton" :slide="slide">
+                  <BotonPrimario>
+                    {{ slide.boton }}
+                  </BotonPrimario>
+                </slot>
+
+
+
               </div>
             </div>
           </div>
 
           <!-- Bloque de texto: tablet -->
-          <div
-            class="absolute inset-x-0 z-10 hidden px-8 text-center
+          <div class="absolute inset-x-0 z-10 hidden px-8 text-center
                    md:block lg:hidden
-                   bottom-[11.5%]"
-          >
+                   bottom-[11.5%]">
             <div class="mx-auto max-w-[760px]">
               <p class="text-[3.1rem] font-medium leading-[1.08] text-white">
                 {{ slide.etiqueta }}
@@ -200,18 +168,20 @@ const modulosSwiper = [Autoplay, Pagination]
               </h2>
 
               <div class="mt-6">
-                <BotonPrimario :texto="slide.boton" />
+                <slot name="boton" :slide="slide">
+                  <BotonPrimario>
+                    {{ slide.boton }}
+                  </BotonPrimario>
+                </slot>
               </div>
             </div>
           </div>
 
           <!-- Bloque de texto: desktop -->
-          <div
-            class="absolute inset-x-0 z-10 hidden px-10 text-center
+          <div class="absolute inset-x-0 z-10 hidden px-10 text-center
                    lg:block
                    bottom-[12.5%]
-                   xl:bottom-[13%]"
-          >
+                   xl:bottom-[13%]">
             <div class="mx-auto max-w-[1100px]">
               <p class="text-[3.1rem] font-medium leading-[1.08] text-white xl:text-[3.95rem]">
                 {{ slide.etiqueta }}
@@ -222,7 +192,15 @@ const modulosSwiper = [Autoplay, Pagination]
               </h2>
 
               <div class="mt-6">
-                <BotonPrimario :texto="slide.boton" />
+
+
+                <slot name="boton" :slide="slide">
+                  <BotonPrimario>
+                    {{ slide.boton }}
+                  </BotonPrimario>
+                </slot>
+
+
               </div>
             </div>
           </div>
