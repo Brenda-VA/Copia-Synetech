@@ -83,5 +83,77 @@
         }
       }
     }
+  },
+  "accesorios": {
+    "metaTitle": "Accesorios para Pantalla Interactiva",
+    "metaDescription": "Soporte de ruedas, PC OPS y dongle inalámbrico para compartir pantalla. Accesorios compatibles con tu pantalla interactiva Synetech.",
+    "banner": {
+      "title": "Accesorios",
+      "subtitle": "Completa tu pantalla interactiva y rompe todos los límites de la colaboración.",
+      "imageAlt": "Accesorios para pantallas interactivas"
+    },
+    "supports": {
+      "title": {
+        "text": "Descubre nuestros",
+        "gradient": "soportes de ruedas"
+      },
+      "cta": "Descargar ficha técnica",
+      "cards": {
+        "card1": {
+          "name": "SY35",
+          "subtitle": "Soporte de ruedas",
+          "description": "Compatible con pantallas interactivas de 65”, 75” y 86”. Incluye bandeja.",
+          "imageAlt": "Soporte de ruedas para monitores de 86 pulgadas"
+        },
+        "card2": {
+          "name": "ST41B",
+          "subtitle": "Soporte de ruedas",
+          "description": "Compatible con pantallas interactivas de 65”, 75” y 86”. Incluye bandeja.",
+          "imageAlt": "Soporte de ruedas para pantalla interactiva"
+        },
+        "card3": {
+          "name": "ST01",
+          "subtitle": "Soporte con altura regulable manual",
+          "description": "Compatible con pantallas interactivas de 65”, 75” y 86”.",
+          "imageAlt": "Soporte de ruedas con ajuste de altura"
+        }
+      }
+    },
+    "modules": {
+      "title": {
+        "text": "¡Pásate a Windows 11 Pro con nuestros",
+        "gradient": "módulos PC OPS!"
+      },
+      "cta": "Descargar ficha técnica",
+      "cards": {
+        "card1": {
+          "name": "PC OPS Intel Core i5 1240p",
+          "subtitle": "Windows 11 Pro Educativo",
+          "description": "Integra un sistema dual en tu pantalla interactiva, manteniendo todas las herramientas del panel.",
+          "imageAlt": "Módulo PC OPS Windows 11 Pro"
+        },
+        "card2": {
+          "name": "PC OPS Intel Core i5 14400",
+          "subtitle": "Windows 11 Pro Educativo",
+          "description": "¡Sustituye tu ordenador de sobremesa! Diseñado para integrarse perfectamente con las pantallas interactivas de Synetech.",
+          "imageAlt": "Módulo PC OPS con sistema dual"
+        }
+      }
+    },
+    "dongle": {
+      "title": {
+        "text": "Empieza a",
+        "gradient": " compartir pantalla ",
+        "rest": "sin conexión a Internet"
+      },
+      "cta": "Descargar ficha técnica",
+      "card": {
+        "name": "Dongle USB",
+        "subtitle": "¡Olvídate de los cables! Comparte pantalla de forma inalámbrica y sin conexión a internet.",
+        "description1": "Compatible con Windows y Mac.",
+        "description2": "Sistema de NFC y Touchback para una conexión rápida y sencilla.",
+        "imageAlt": "Dongle USB para compartir pantalla"
+      }
+    }
   }
 }

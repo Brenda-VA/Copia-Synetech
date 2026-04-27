@@ -83,5 +83,77 @@
         }
       }
     }
+  },
+  "accesorios": {
+    "metaTitle": "Interactive Display Accessories",
+    "metaDescription": "Mobile stands, PC OPS modules, and wireless screen-sharing dongles. Compatible accessories for your Synetech interactive display.",
+    "banner": {
+      "title": "Accessories",
+      "subtitle": "Complete your interactive display and break all boundaries of collaboration.",
+      "imageAlt": "Interactive display accessories"
+    },
+    "supports": {
+      "title": {
+        "text": "Discover our",
+        "gradient": "mobile stands"
+      },
+      "cta": "Download datasheet",
+      "cards": {
+        "card1": {
+          "name": "SY35",
+          "subtitle": "Mobile stand",
+          "description": "Compatible with 65”, 75”, and 86” interactive displays. Tray included.",
+          "imageAlt": "Mobile stand for 86-inch monitors"
+        },
+        "card2": {
+          "name": "ST41B",
+          "subtitle": "Mobile stand",
+          "description": "Compatible with 65”, 75”, and 86” interactive displays. Tray included.",
+          "imageAlt": "Interactive display mobile stand"
+        },
+        "card3": {
+          "name": "ST01",
+          "subtitle": "Manual height-adjustable stand",
+          "description": "Compatible with 65”, 75”, and 86” interactive displays.",
+          "imageAlt": "Height-adjustable mobile stand"
+        }
+      }
+    },
+    "modules": {
+      "title": {
+        "text": "Upgrade to Windows 11 Pro with our",
+        "gradient": "PC OPS modules!"
+      },
+      "cta": "Download datasheet",
+      "cards": {
+        "card1": {
+          "name": "Intel Core i5 1240p PC OPS",
+          "subtitle": "Windows 11 Pro Education",
+          "description": "Integrate a dual system into your interactive display, keeping all panel tools.",
+          "imageAlt": "Windows 11 Pro PC OPS Module"
+        },
+        "card2": {
+          "name": "Intel Core i5 14400 PC OPS",
+          "subtitle": "Windows 11 Pro Education",
+          "description": "Replace your desktop computer! Designed to integrate perfectly with Synetech interactive displays.",
+          "imageAlt": "Dual system PC OPS Module"
+        }
+      }
+    },
+    "dongle": {
+      "title": {
+        "text": "Start",
+        "gradient": " screen sharing ",
+        "rest": "without an internet connection"
+      },
+      "cta": "Download datasheet",
+      "card": {
+        "name": "USB Dongle",
+        "subtitle": "Forget the cables! Share your screen wirelessly and without an internet connection.",
+        "description1": "Compatible with Windows and Mac.",
+        "description2": "NFC and Touchback system for quick and easy connection.",
+        "imageAlt": "USB Screen-sharing dongle"
+      }
+    }
   }
 }
