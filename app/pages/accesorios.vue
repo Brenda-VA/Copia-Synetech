@@ -203,6 +203,20 @@ const breakpointsModulos = {
                 </h2>
             </template>
 
+            <!-- 
+    #subtitulo es otro named slot.
+    Lo bueno es que aquí puedo personalizarlo como quiera:
+    color, ancho, saltos de línea, responsive, etc.
+    Si no paso este slot, BaseSeccionTarjetas no pinta nada.
+    -->
+            <template #subtitulo>
+                <p class="max-w-[720px] text-[1.05rem] leading-relaxed text-black/65 md:text-[1.25rem]">
+                    Integra más potencia en tu pantalla interactiva
+                    <br class="hidden md:block">
+                    sin cambiar la estructura de tu aula.
+                </p>
+            </template>
+
             <template #item="{ item }">
                 <article
                     class="flex h-[620px] w-[295px] flex-col rounded-[2.5rem] bg-white px-8 py-10 shadow-[0_10px_25px_rgba(0,0,0,0.12)] sm:w-[430px] lg:w-[560px]">
@@ -235,8 +249,8 @@ const breakpointsModulos = {
             </template>
         </UiBaseSeccionTarjetas>
 
-        <!-- dongle -->
-        <!-- Aquí uso el mismo componente base, pero en modo static donde no hay items ni Swiper
+        <!-- dongle
+        Aquí uso el mismo componente base, pero en modo static donde no hay items ni Swiper
         BaseSeccionTarjetas solo pinta la estructura de sección y el contenido viene por el default slot -->
         <UiBaseSeccionTarjetas modo="static">
             <template #titulo>

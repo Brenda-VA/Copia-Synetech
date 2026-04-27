@@ -60,6 +60,9 @@ function guardarSwiper(swiper: any) {
         <div :class="props.titleClass">
             <!-- slot llamado #titulo: no sabes como debe ser el titulo, solo deja un hueco para que la página escriba el h2, spans, gradientes saltos, etc  -->
             <slot name="titulo" />
+            <div v-if="$slots.subtitulo" class="mt-4">
+                <slot name="subtitulo" />
+            </div>
         </div>
 
         <div :class="props.contentClass">
@@ -96,7 +99,7 @@ function guardarSwiper(swiper: any) {
             </template>
 
             <template v-else>
-                <!-- default slot: se usa cuando la sección no necesita un swiper, ua sea pq tenga una sola tarjeta o pq la pantalla sea tan grande que todo quepa ahi -->
+                <!-- default slot: se usa cuando la sección no necesita un swiper, ya sea pq tenga una sola tarjeta o pq la pantalla sea tan grande que todo quepa ahí -->
                 <slot />
             </template>
         </div>
