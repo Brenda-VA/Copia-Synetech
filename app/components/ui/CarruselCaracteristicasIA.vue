@@ -45,6 +45,10 @@ const emit = defineEmits<{
   (e: 'abrir-modal', modal: TarjetaModalIA): void
 }>()
 
+function emitirAbrirModal(modal: TarjetaModalIA) {
+  emit('abrir-modal', modal)
+}
+
 // estado del swiper
 // Guardo la instancia para poder controlarla luego.
 // También guardo el índice activo y el estado del autoplay para los controles inferiores.
@@ -160,27 +164,19 @@ onBeforeUnmount(() => {
     window.removeEventListener('resize', actualizarSwiper)
   }
 })
+
+
 </script>
 
 <template>
   <div class="overflow-hidden">
-    <Swiper
-      :modules="modulosSwiper"
-      :slides-per-view="1.06"
-      :space-between="14"
-      :centered-slides="false"
-      :loop="true"
-      :speed="650"
-      :observer="true"
-      :observe-parents="true"
-      :update-on-window-resize="true"
-      :watch-overflow="true"
+    <Swiper :modules="modulosSwiper" :slides-per-view="1.06" :space-between="14" :centered-slides="false" :loop="true"
+      :speed="650" :observer="true" :observe-parents="true" :update-on-window-resize="true" :watch-overflow="true"
       :autoplay="{
         delay: 4200,
         disableOnInteraction: false,
         pauseOnMouseEnter: false
-      }"
-      :breakpoints="{
+      }" :breakpoints="{
         420: {
           slidesPerView: 1.08,
           spaceBetween: 14
@@ -197,74 +193,43 @@ onBeforeUnmount(() => {
           slidesPerView: 1.18,
           spaceBetween: 20
         }
-      }"
-      class="w-full overflow-hidden"
-      @swiper="guardarSwiper"
-      @slideChange="cambiarIndice"
-      @touchStart="alArrastrarSwiper"
-    >
-      <SwiperSlide
-        v-for="tarjeta in props.tarjetas"
-        :key="tarjeta.id"
-        class="pb-2"
-      >
-      <!-- si una tarjeta del carrusel emite abrir-modal, el carrusel lo envia al padre -->
-        <TarjetaCaracteristicaIA
-          :tarjeta="tarjeta"
-          vista="movil"
-          :ruta-flecha="props.rutaFlecha"
-          :abrir-tarjeta-label="props.abrirTarjetaLabel"
-          @abrir-modal="emit('abrir-modal', $event)"
-        />
+      }" class="w-full overflow-hidden" @swiper="guardarSwiper" @slideChange="cambiarIndice"
+      @touchStart="alArrastrarSwiper">
+      <SwiperSlide v-for="tarjeta in props.tarjetas" :key="tarjeta.id" class="pb-2">
+        <!-- si una tarjeta del carrusel emite abrir-modal, el carrusel lo envia al padre -->
+        <slot name="slide" :tarjeta="tarjeta" :rutaFlecha="props.rutaFlecha"
+          :abrirTarjetaLabel="props.abrirTarjetaLabel" :abrirModal="emitirAbrirModal">
+          <TarjetaCaracteristicaIA :tarjeta="tarjeta" vista="movil" :ruta-flecha="props.rutaFlecha"
+            :abrir-tarjeta-label="props.abrirTarjetaLabel" @abrir-modal="emitirAbrirModal" />
+        </slot>
       </SwiperSlide>
     </Swiper>
 
     <div class="mt-6 flex items-center justify-center gap-3 md:mt-7">
-      <button
-        type="button"
+      <button type="button"
         class="inline-flex h-[2.6rem] w-[2.6rem] items-center justify-center rounded-full bg-[#f6f6f6] text-black/35 transition duration-200 hover:scale-[1.03] md:h-[2.8rem] md:w-[2.8rem]"
-        :aria-label="autoplayActivo ? props.labels.pause : props.labels.play"
-        @click="alternarAutoplay"
-      >
-        <svg
-          v-if="autoplayActivo"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class="h-[18px] w-[18px]"
-        >
+        :aria-label="autoplayActivo ? props.labels.pause : props.labels.play" @click="alternarAutoplay">
+        <svg v-if="autoplayActivo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+          class="h-[18px] w-[18px]">
           <rect x="6" y="5" width="4" height="14" rx="1.4"></rect>
           <rect x="14" y="5" width="4" height="14" rx="1.4"></rect>
         </svg>
 
-        <svg
-          v-else
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class="h-[18px] w-[18px]"
-        >
+        <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+          class="h-[18px] w-[18px]">
           <path d="M8.2 6.6c0-1.1 1.2-1.8 2.1-1.2l8 4.9c.9.6.9 1.9 0 2.5l-8 4.9c-.9.6-2.1-.1-2.1-1.2V6.6Z"></path>
         </svg>
       </button>
 
       <div
         class="inline-flex items-center gap-2 rounded-full bg-[#f6f6f6] px-[0.92rem] py-[0.72rem] md:gap-[0.55rem] md:px-[1.05rem] md:py-[0.8rem]"
-        role="tablist"
-        :aria-label="props.labels.indicadores"
-      >
-        <button
-          v-for="indice in totalTarjetas"
-          :key="indice"
-          type="button"
+        role="tablist" :aria-label="props.labels.indicadores">
+        <button v-for="indice in totalTarjetas" :key="indice" type="button"
           class="h-[0.64rem] w-[0.64rem] rounded-full bg-black/35 transition-all duration-300 md:h-[0.68rem] md:w-[0.68rem]"
           :class="indiceActivo === indice - 1
             ? 'w-[1.8rem] bg-black/70 md:w-[2.1rem]'
-            : ''"
-          :aria-label="props.labels.irATarjeta(indice)"
-          :aria-pressed="indiceActivo === indice - 1 ? 'true' : 'false'"
-          @click="irATarjeta(indice - 1)"
-        />
+            : ''" :aria-label="props.labels.irATarjeta(indice)"
+          :aria-pressed="indiceActivo === indice - 1 ? 'true' : 'false'" @click="irATarjeta(indice - 1)" />
       </div>
     </div>
   </div>

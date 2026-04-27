@@ -127,7 +127,15 @@ const rutaFlechasResuelta = computed(() => {
       <!-- Se delega completamente la responsabilidad del carrusel a un componente hijo.
            El padre únicamente le pasa los datos necesarios mediante props. -->
       <UiCarruselCaracteristicasIA class="mt-8 lg:hidden" :tarjetas="tarjetas" :ruta-flecha="rutaFlechasResuelta"
-        :labels="labelsCarrusel" @abrir-modal="abrirModal" />
+        :labels="labelsCarrusel" @abrir-modal="abrirModal">
+        <!-- Reenvío del slot #slide:
+        esta seccion no personaliza nada, si prueba.vue pasa un slot #slide, este se lo pasa al carrusel
+          -->
+        <template v-if="$slots.slide" #slide="{ tarjeta, rutaFlecha, abrirTarjetaLabel, abrirModal }">
+          <slot name="slide" :tarjeta="tarjeta" :rutaFlecha="rutaFlecha" :abrirTarjetaLabel="abrirTarjetaLabel"
+            :abrirModal="abrirModal" />
+        </template>
+      </UiCarruselCaracteristicasIA>
 
       <!-- tablet grande -->
       <!-- En este breakpoint se abandona el carrusel y se utiliza un layout en grid.

@@ -139,6 +139,39 @@ Su default slot permite cambiar el icono de adentro
       </template>
 
 
+      <!-- personalizar sólo el slide que se muestra en móvil con slots, el flujo es este:
+        prueba.vue
+        -> pasa slot #slide a SeccionCaracteristicasIA
+
+        SeccionCaracteristicasIA
+        -> reenvía slot #slide a CarruselCaracteristicasIA
+
+        CarruselCaracteristicasIA
+        -> usa ese slot dentro de cada SwiperSlide
+
+        TarjetaCaracteristicaIA
+        -> queda como fallback si no personalizas nada                                     -->
+      <template #slide="{ tarjeta }">
+        <article class="min-h-[560px] rounded-[2.2rem] bg-black p-5 text-white">
+          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/50">
+            Prueba slot slide
+          </p>
+          <h3 class="mt-4 text-[1.4rem] font-bold leading-tight">
+            {{ tarjeta.titulo }}
+          </h3>
+          <p class="mt-1 text-[1.05rem] leading-tight text-white/70">
+            {{ tarjeta.subtitulo }}
+          </p>
+          <div class="mt-6 overflow-hidden rounded-[1.8rem] bg-white/10">
+            <picture>
+              <source media="(min-width: 1280px)" :srcset="tarjeta.imagenes.desktop">
+              <source media="(min-width: 768px)" :srcset="tarjeta.imagenes.tablet">
+              <img :src="tarjeta.imagenes.movil" :alt="tarjeta.alt" class="h-[360px] w-full object-cover">
+            </picture>
+          </div>
+        </article>
+      </template>
+
     </SeccionesSeccionCaracteristicasIA>
   </main>
 </template>
