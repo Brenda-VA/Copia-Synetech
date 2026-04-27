@@ -115,22 +115,19 @@ const rutaFlechasResuelta = computed(() => {
       <!-- El título se puede recibir por props o salir del locale por defecto.
            Así no rompemos la reutilización actual del componente. -->
       <h2
-        class="max-w-[1320px] text-[2.2rem] font-semibold leading-[1.15] tracking-tight text-black md:text-[3.2rem] xl:text-[3.75rem]"
-      >
-      <!-- muestra el titulo con mayor prioridad, ya sea prop o la linea de traduccion i18n -->
-        {{ tituloSeccionResuelto }}
+        class="max-w-[1320px] text-[2.2rem] font-semibold leading-[1.15] tracking-tight text-black md:text-[3.2rem] xl:text-[3.75rem]">
+        <!-- si el padre pasa un titulo personalizado, se pinta aqui.
+       si no pasa nada, se usa el titulo resuelto por prop o i18n -->
+        <slot name="titulo">
+          {{ tituloSeccionResuelto }}
+        </slot>
       </h2>
 
       <!-- móvil + tablet pequeña -->
       <!-- Se delega completamente la responsabilidad del carrusel a un componente hijo.
            El padre únicamente le pasa los datos necesarios mediante props. -->
-      <UiCarruselCaracteristicasIA
-        class="mt-8 lg:hidden"
-        :tarjetas="tarjetas"
-        :ruta-flecha="rutaFlechasResuelta"
-        :labels="labelsCarrusel"
-        @abrir-modal="abrirModal"
-      />
+      <UiCarruselCaracteristicasIA class="mt-8 lg:hidden" :tarjetas="tarjetas" :ruta-flecha="rutaFlechasResuelta"
+        :labels="labelsCarrusel" @abrir-modal="abrirModal" />
 
       <!-- tablet grande -->
       <!-- En este breakpoint se abandona el carrusel y se utiliza un layout en grid.
@@ -139,25 +136,22 @@ const rutaFlechasResuelta = computed(() => {
         <div class="grid gap-6 lg:grid-cols-2">
           <!-- render dinámico -->
           <!-- Se recorre el array y se renderiza una tarjeta por cada elemento.
-               Cada tarjeta recibe únicamente los datos que necesita. -->
-          <UiTarjetaCaracteristicaIA
-            v-for="tarjeta in tarjetasTabletNormales"
-            :key="tarjeta.id"
-            :tarjeta="tarjeta"
-            vista="tablet"
-            :ruta-flecha="rutaFlechasResuelta"
-            @abrir-modal="abrirModal"
-          />
+               Cada tarjeta recibe únicamente los datos que necesita -->
+          <UiTarjetaCaracteristicaIA v-for="tarjeta in tarjetasTabletNormales" :key="tarjeta.id" :tarjeta="tarjeta"
+            vista="tablet" :ruta-flecha="rutaFlechasResuelta" @abrir-modal="abrirModal">
+            <template v-if="$slots.accion" #accion="{ tarjeta, ariaLabel, to, abrirModal }">
+              <slot name="accion" :tarjeta="tarjeta" :ariaLabel="ariaLabel" :to="to" :abrirModal="abrirModal" />
+            </template>
+          </UiTarjetaCaracteristicaIA>
         </div>
 
         <div class="mt-6">
-          <UiTarjetaCaracteristicaIA
-            :tarjeta="tarjetaTabletAncha"
-            vista="tablet"
-            formato="ancha"
-            :ruta-flecha="rutaFlechasResuelta"
-            @abrir-modal="abrirModal"
-          />
+          <UiTarjetaCaracteristicaIA :tarjeta="tarjetaTabletAncha" vista="tablet" formato="ancha"
+            :ruta-flecha="rutaFlechasResuelta" @abrir-modal="abrirModal">
+            <template v-if="$slots.accion" #accion="{ tarjeta, ariaLabel, to, abrirModal }">
+              <slot name="accion" :tarjeta="tarjeta" :ariaLabel="ariaLabel" :to="to" :abrirModal="abrirModal" />
+            </template>
+          </UiTarjetaCaracteristicaIA>
         </div>
       </div>
 
@@ -166,25 +160,21 @@ const rutaFlechasResuelta = computed(() => {
            reutilizando la misma componente de tarjeta para evitar duplicación de código. -->
       <div class="hidden xl:block">
         <div class="mt-8 grid gap-6 xl:mt-10 xl:grid-cols-3">
-          <UiTarjetaCaracteristicaIA
-            v-for="tarjeta in tarjetasSuperiores"
-            :key="tarjeta.id"
-            :tarjeta="tarjeta"
-            vista="desktop"
-            :ruta-flecha="rutaFlechasResuelta"
-            @abrir-modal="abrirModal"
-          />
+          <UiTarjetaCaracteristicaIA v-for="tarjeta in tarjetasSuperiores" :key="tarjeta.id" :tarjeta="tarjeta"
+            vista="desktop" :ruta-flecha="rutaFlechasResuelta" @abrir-modal="abrirModal">
+            <template v-if="$slots.accion" #accion="{ tarjeta, ariaLabel, to, abrirModal }">
+              <slot name="accion" :tarjeta="tarjeta" :ariaLabel="ariaLabel" :to="to" :abrirModal="abrirModal" />
+            </template>
+          </UiTarjetaCaracteristicaIA>
         </div>
 
         <div class="mt-6 grid gap-6 xl:grid-cols-[1fr_2fr]">
-          <UiTarjetaCaracteristicaIA
-            v-for="tarjeta in tarjetasInferiores"
-            :key="tarjeta.id"
-            :tarjeta="tarjeta"
-            vista="desktop"
-            :ruta-flecha="rutaFlechasResuelta"
-            @abrir-modal="abrirModal"
-          />
+          <UiTarjetaCaracteristicaIA v-for="tarjeta in tarjetasInferiores" :key="tarjeta.id" :tarjeta="tarjeta"
+            vista="desktop" :ruta-flecha="rutaFlechasResuelta" @abrir-modal="abrirModal">
+            <template v-if="$slots.accion" #accion="{ tarjeta, ariaLabel, to, abrirModal }">
+              <slot name="accion" :tarjeta="tarjeta" :ariaLabel="ariaLabel" :to="to" :abrirModal="abrirModal" />
+            </template>
+          </UiTarjetaCaracteristicaIA>
         </div>
       </div>
 
@@ -197,25 +187,14 @@ const rutaFlechasResuelta = computed(() => {
                                                                   - hay contenido real 
           @click="cerrarModal": Si haces click en el fondo oscuro, se cierra.                                                                
           @click.stop: Si haces click dentro de la caja blanca, no se cierra.-->
-    <div
-      v-if="modalAbierto && modalActivo"
-      class="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 px-4"
-      @click="cerrarModal"
-    >
-      <div
-        class="w-full max-w-[560px] rounded-[2rem] bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.22)] md:p-8"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="titulo-modal-ia"
-        @click.stop
-      >
+    <div v-if="modalAbierto && modalActivo"
+      class="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 px-4" @click="cerrarModal">
+      <div class="w-full max-w-[560px] rounded-[2rem] bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.22)] md:p-8"
+        role="dialog" aria-modal="true" aria-labelledby="titulo-modal-ia" @click.stop>
         <div class="flex items-start justify-between gap-4">
           <div>
-            <h3
-              id="titulo-modal-ia"
-              class="text-[1.4rem] font-semibold leading-tight text-black md:text-[1.7rem]"
-            >
-            <!-- el texto del modal ya viene traducido desde arriba
+            <h3 id="titulo-modal-ia" class="text-[1.4rem] font-semibold leading-tight text-black md:text-[1.7rem]">
+              <!-- el texto del modal ya viene traducido desde arriba
              aqui ya no se usa t() para el contenido, solo se pinta -->
               {{ modalActivo.titulo }}
             </h3>
@@ -225,12 +204,9 @@ const rutaFlechasResuelta = computed(() => {
             </p>
           </div>
 
-          <button
-            type="button"
+          <button type="button"
             class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black text-white"
-            :aria-label="t('caracteristicasIA.modal.cerrar')"
-            @click="cerrarModal"
-          >
+            :aria-label="t('caracteristicasIA.modal.cerrar')" @click="cerrarModal">
             ✕
           </button>
         </div>

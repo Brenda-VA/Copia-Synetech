@@ -47,6 +47,12 @@
     }
   },
   "prueba": {
+    "hero": {
+      "botones": {
+        "demo": "Try demo",
+        "ia": "Explore AI"
+      }
+    },
     "caracteristicasIA": {
       "heading": "Digital resources for a more dynamic classroom",
       "tarjetas": {

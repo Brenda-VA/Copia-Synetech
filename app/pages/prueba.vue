@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TarjetaIA } from '@/types/tarjetas'//nombre del tipo: TarjetaIA
 import BotonPrimario from '~/components/ui/BotonPrimario.vue';//importamos el boton pa probar los slots
-
+import BotonCircular from '~/components/ui/BotonCircular.vue'
 const { t } = useI18n()
 
 /* esta pagina traduce sus propias tarjetas porque aqui el contenido es personalizado
@@ -76,14 +76,17 @@ const tarjetasPrueba = computed<TarjetaIA[]>(() => [//tarjetasPrueba es un array
 
 <template>
   <main class="min-h-screen bg-[#ececec]">
-<!-- dese aqui con <template> personalizamos el slot de HeroCarrusel, modificamos el textopara los botones de ambos slides -->
+
     <!-- SCOPED SLOT -->
     <SeccionesHeroCarrusel>
-      
+      <!-- dese aqui con <template> personalizamos el slot de HeroCarrusel, modificamos el textopara los botones de ambos slides -->
       <template #boton="{ slide }">
         <BotonPrimario>
           <span class="inline-flex items-center gap-2">
-            {{ slide.variante == 'demo' ? 'Probar demo desde slot en prueba.vue' : 'Explorar IA desde slot en prueba.vue' }}
+            {{ slide.variante === 'demo'
+              ? t('prueba.hero.botones.demo')
+              : t('prueba.hero.botones.ia')
+            }}
             <span aria-hidden="true">→</span>
           </span>
         </BotonPrimario>
@@ -105,14 +108,37 @@ const tarjetasPrueba = computed<TarjetaIA[]>(() => [//tarjetasPrueba es un array
       </BotonPrimario>
     </section>
 
-
     <SeccionesSeccionCaracteristicasIA :tarjetas="tarjetasPrueba" ruta-flechas="/">
+      <!-- Personalizacion con slot y titulo hardcoreado
       <template #titulo>
         Recursos digitales<br>
         <span class="text-black/45">
           para una clase más dinámica
         </span>
+      </template> -->
+
+      <!-- personalizacioin del titulo con slot y traducido con clave i18n -->
+      <template #titulo>
+        {{ t('prueba.caracteristicasIA.heading') }}
+        <span class="text-black/45"> IA</span>
       </template>
+
+      <!-- este slot viene de un componente q está muchos niveles abajo: 
+      1. prueba.vue: usa SeccionCaracteristicasIA y es el componente final que pinta el botón
+Su default slot permite cambiar el icono de adentro
+      2. SeccionCaracteristicasIA.vue: contiene TarjetaCaracteristicaIA y se encarga del reenvío del slot hacia sus hijos
+      3. TarjetaCaracteristicaIA.vue: contiene BotonCircular y tiene un named scoped slot llamado 'accion'
+      4. BotonCircular.vue: nace aqui, este es el que queremos personalizar, tiene default slot para icono -->
+      <template #accion="{ tarjeta, ariaLabel, to, abrirModal }">
+        <BotonCircular :aria-label="ariaLabel" :to="to" @click="tarjeta.modal ? abrirModal() : null">
+          <!-- simbolo del boton personalizado con slot, antes era '>' y ahora '+' -->
+          <span aria-hidden="true" class="text-[1rem] font-bold leading-none">
+            +
+          </span>
+        </BotonCircular>
+      </template>
+
+
     </SeccionesSeccionCaracteristicasIA>
   </main>
 </template>

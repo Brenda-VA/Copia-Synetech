@@ -47,6 +47,12 @@
     }
   },
   "prueba": {
+    "hero": {
+      "botones": {
+        "demo": "Probar demo",
+        "ia": "Explorar IA"
+      }
+    },
     "caracteristicasIA": {
       "heading": "Recursos digitales para una clase más dinámica",
       "tarjetas": {
