@@ -30,6 +30,8 @@ interface Props {
     sectionClass?: string
     titleClass?: string
     contentClass?: string
+    slideClass?: string
+    controlsClass?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -43,7 +45,9 @@ const props = withDefaults(defineProps<Props>(), {
     breakpoints: () => ({}),
     sectionClass: 'w-full py-12 md:py-16',
     titleClass: 'px-6 md:px-10 lg:px-20',
-    contentClass: 'mt-10'
+    contentClass: 'mt-10',
+    slideClass: 'h-auto w-auto pb-4',
+    controlsClass: 'mt-6 flex justify-end gap-10 px-8'
 })
 
 // aquí guardo la instancia real de Swiper
@@ -60,6 +64,7 @@ function guardarSwiper(swiper: any) {
         <div :class="props.titleClass">
             <!-- slot llamado #titulo: no sabes como debe ser el titulo, solo deja un hueco para que la página escriba el h2, spans, gradientes saltos, etc  -->
             <slot name="titulo" />
+
             <div v-if="$slots.subtitulo" class="mt-4">
                 <slot name="subtitulo" />
             </div>
@@ -72,7 +77,7 @@ function guardarSwiper(swiper: any) {
                 <Swiper slides-per-view="auto" :space-between="props.spaceBetween"
                     :slides-offset-before="props.slidesOffsetBefore" :slides-offset-after="props.slidesOffsetAfter"
                     :breakpoints="props.breakpoints" @swiper="guardarSwiper">
-                    <SwiperSlide v-for="(item, index) in props.items" :key="index" class="h-auto w-auto pb-8">
+                    <SwiperSlide v-for="(item, index) in props.items" :key="index" :class="props.slideClass">
                         <!-- slot nombrado y scoped #item: es scoped porque le pasamos datos al padre: item e index
                                 - BaseSeccionTarjetas recorre props.items,
                                 - pero accesorios.vue decide cómo se pinta cada tarjeta -->
@@ -81,14 +86,17 @@ function guardarSwiper(swiper: any) {
                 </Swiper>
 
                 <!-- flechas genéricas para swiper  -->
-                <div v-if="props.mostrarFlechas" class="mt-6 flex justify-end gap-10 px-8"
-                    :class="props.ocultarFlechasDesktop ? 'lg:hidden' : ''">
+                <div v-if="props.mostrarFlechas" :class="[
+                    props.controlsClass,
+                    props.ocultarFlechasDesktop ? 'lg:hidden' : ''
+                ]">
                     <button type="button"
                         class="flex h-11 w-11 items-center justify-center rounded-full bg-white text-2xl shadow"
                         :class="swiperActivo?.isBeginning ? 'cursor-default text-black/30' : 'cursor-pointer text-black'"
                         @click="swiperActivo?.slidePrev()">
                         ←
                     </button>
+
                     <button type="button"
                         class="flex h-11 w-11 items-center justify-center rounded-full bg-white text-2xl shadow"
                         :class="swiperActivo?.isEnd ? 'cursor-default text-black/30' : 'cursor-pointer text-black'"
@@ -99,7 +107,10 @@ function guardarSwiper(swiper: any) {
             </template>
 
             <template v-else>
-                <!-- default slot: se usa cuando la sección no necesita un swiper, ya sea pq tenga una sola tarjeta o pq la pantalla sea tan grande que todo quepa ahí -->
+                <!-- default slot: se usa cuando la sección no necesita un swiper, ya sea pq tenga una sola tarjeta o pq la pantalla sea tan grande que todo quepa ahí
+                 
+                
+                y no necesita mejorar que necesite una cap-->
                 <slot />
             </template>
         </div>

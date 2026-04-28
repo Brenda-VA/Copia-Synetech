@@ -80,13 +80,10 @@ const tarjetasPrueba = computed<TarjetaIA[]>(() => [//tarjetasPrueba es un array
     <!-- SCOPED SLOT -->
     <SeccionesHeroCarrusel>
       <!-- dese aqui con <template> personalizamos el slot de HeroCarrusel, modificamos el textopara los botones de ambos slides -->
-      <template #boton="{ slide }">
-        <BotonPrimario>
+      <template #boton>
+        <BotonPrimario to="/accesorios">
           <span class="inline-flex items-center gap-2">
-            {{ slide.variante === 'demo'
-              ? t('prueba.hero.botones.demo')
-              : t('prueba.hero.botones.ia')
-            }}
+            Ir a Accesorios
             <span aria-hidden="true">→</span>
           </span>
         </BotonPrimario>
