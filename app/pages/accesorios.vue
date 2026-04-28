@@ -151,20 +151,20 @@ const gruposPrecioTaurus = computed(() => [
     },
     {
         id: 'ia',
-        titulo: 'Añade Inteligencia Artificial',
+        titulo: 'Añade Inteligencia Artificial:',
         opciones: [
             { id: 'licencia-ia', nombre: 'Licencia Synetech IA', precio: 96.79 }
         ]
+    },
+    {
+        id: 'seguro',
+        titulo: 'Asegura tu pantalla:',
+        mostrarLineaFinal: false,
+        opciones: [
+            { id: 'care-plus', nombre: 'Synetech Care+', precio: 404.61 }
+        ]
     }
 ])
-
-const grupoSeguroTaurus = computed(() => ({
-    id: 'seguro',
-    titulo: 'Asegura tu pantalla :',
-    opciones: [
-        { id: 'care-plus', nombre: 'Synetech Care+', precio: 404.61 }
-    ]
-}))
 
 const gruposPrecioPiscis = computed(() => [
     {
@@ -173,15 +173,6 @@ const gruposPrecioPiscis = computed(() => [
             { id: 'piscis-65', nombre: 'Piscis 65”*', precio: 1039.22 }
         ]
     },
-    /*{
-        id: 'soporte',
-        titulo: 'Añade un soporte:',
-        opciones: [
-            { id: 'soporte-sy35', nombre: 'Soporte SY35', precio: 196.19 },
-            { id: 'soporte-st01', nombre: 'Soporte ST01', precio: 240.26 },
-            { id: 'soporte-st41b', nombre: 'Soporte ST41B', precio: 275.80 }
-        ]
-    },*/
     {
         id: 'pc-ops',
         titulo: 'Añade un PC OPS:',
@@ -189,18 +180,18 @@ const gruposPrecioPiscis = computed(() => [
             { id: 'windows-i5-1240', nombre: 'Windows 11 Pro i5-1240', precio: 732.36 },
             { id: 'windows-i5-14400', nombre: 'Windows 11 Pro i5-14400', precio: 933.85 }
         ]
+    },
+    {
+        id: 'seguro',
+        titulo: 'Asegura tu pantalla :',
+        mostrarLineaFinal: false,
+        opciones: [
+            { id: 'care-plus-1', nombre: 'Synetech Care+', precio: 404.61 },
+            { id: 'care-plus-2', nombre: 'Synetech Care Extra', precio: 504.61 },
+            { id: 'care-plus-3', nombre: 'Synetech Care Premium', precio: 604.61 }
+        ]
     }
 ])
-
-const grupoSeguroPiscis = computed(() => ({
-    id: 'seguro',
-    titulo: 'Asegura tu pantalla :',
-    opciones: [
-        { id: 'care-plus', nombre: 'Synetech Care+', precio: 404.61 },
-        { id: 'care-plus', nombre: 'Synetech Care+', precio: 404.61 },
-        { id: 'care-plus', nombre: 'Synetech Care+', precio: 404.61 }
-    ]
-}))
 
 </script>
 
@@ -441,11 +432,11 @@ const grupoSeguroPiscis = computed(() => ({
 
         <!-- section 4 - prices TAURUS -->
         <UiConsultaPrecio titulo="Consulta precio" subtitulo="Taurus" :grupos="gruposPrecioTaurus"
-            :grupo-seguro="grupoSeguroTaurus" nota="*Incluye soporte para montaje en pared" />
+            nota="*Incluye soporte para montaje en pared" />
 
         <!-- section 5 - prices PISCIS -->
         <UiConsultaPrecio titulo="Puede ser otro titulo" subtitulo="Piscis" :grupos="gruposPrecioPiscis"
-            :grupo-seguro="grupoSeguroPiscis" nota="*Incluye soporte para montaje en pared" />
+            nota="*Incluye soporte para montaje en pared" />
 
     </main>
 </template>

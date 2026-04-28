@@ -155,5 +155,58 @@
         "imageAlt": "USB Screen-sharing dongle"
       }
     }
+  },
+  "precios": {
+    "comun": {
+      "titulo": "Check price",
+      "total": "TOTAL",
+      "boton": "How to buy it?",
+      "nota": "*Wall mount included"
+    },
+    "grupos": {
+      "soporte": "Add a stand:",
+      "pcOps": "Add a PC OPS:",
+      "ia": "Add Artificial Intelligence:",
+      "seguro": "Protect your display:"
+    },
+    "opciones": {
+      "soportes": {
+        "sy35": "SY35 Stand",
+        "st01": "ST01 Stand",
+        "st41b": "ST41B Stand"
+      },
+      "pcOps": {
+        "i51240": "Windows 11 Pro i5-1240",
+        "i514400": "Windows 11 Pro i5-14400"
+      },
+      "ia": {
+        "licencia": "Synetech AI License"
+      },
+      "seguros": {
+        "carePlus": "Synetech Care+",
+        "careExtra": "Synetech Care Extra",
+        "carePremium": "Synetech Care Premium"
+      }
+    },
+    "taurus": {
+      "subtitulo": "Taurus",
+      "opciones": {
+        "pantalla": {
+          "taurus65": "Taurus 65”*",
+          "taurus75": "Taurus 75”*",
+          "taurus86": "Taurus 86”*"
+        }
+      }
+    },
+    "gemini": {
+      "subtitulo": "Gemini",
+      "opciones": {
+        "pantalla": {
+          "gemini65": "Gemini 65”*",
+          "gemini75": "Gemini 75”*",
+          "gemini86": "Gemini 86”*"
+        }
+      }
+    }
   }
 }

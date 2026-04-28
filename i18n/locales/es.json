@@ -155,5 +155,58 @@
         "imageAlt": "Dongle USB para compartir pantalla"
       }
     }
+  },
+  "precios": {
+    "comun": {
+      "titulo": "Consulta precio",
+      "total": "TOTAL",
+      "boton": "¿cómo comprarlo?",
+      "nota": "*Incluye soporte para montaje en pared"
+    },
+    "grupos": {
+      "soporte": "Añade un soporte:",
+      "pcOps": "Añade un PC OPS:",
+      "ia": "Añade Inteligencia Artificial:",
+      "seguro": "Asegura tu pantalla:"
+    },
+    "opciones": {
+      "soportes": {
+        "sy35": "Soporte SY35",
+        "st01": "Soporte ST01",
+        "st41b": "Soporte ST41B"
+      },
+      "pcOps": {
+        "i51240": "Windows 11 Pro i5-1240",
+        "i514400": "Windows 11 Pro i5-14400"
+      },
+      "ia": {
+        "licencia": "Licencia Synetech IA"
+      },
+      "seguros": {
+        "carePlus": "Synetech Care+",
+        "careExtra": "Synetech Care Extra",
+        "carePremium": "Synetech Care Premium"
+      }
+    },
+    "taurus": {
+      "subtitulo": "Taurus",
+      "opciones": {
+        "pantalla": {
+          "taurus65": "Taurus 65”*",
+          "taurus75": "Taurus 75”*",
+          "taurus86": "Taurus 86”*"
+        }
+      }
+    },
+    "gemini": {
+      "subtitulo": "Gemini",
+      "opciones": {
+        "pantalla": {
+          "gemini65": "Gemini 65”*",
+          "gemini75": "Gemini 75”*",
+          "gemini86": "Gemini 86”*"
+        }
+      }
+    }
   }
 }
