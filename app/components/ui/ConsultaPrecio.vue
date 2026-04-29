@@ -79,12 +79,7 @@ function formatearPrecio(precio: number) {
             </header>
             <!-- wrapper para centrar la tarjeta -->
             <div class="flex justify-center">
-                <!-- tarjeta blanca principal 
-                 <article class="w-full 
-                rounded-[2.5rem] 
-                ring-1 ring-inset ring-black/20 bg-white 
-                px-7 md:px-40
-                py-14"> -->
+                <!-- tarjeta blanca principal -->
                 <article class="w-full 
                 rounded-[2.5rem] 
                 ring-1 ring-inset ring-black/20 bg-white 

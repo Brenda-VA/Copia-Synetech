@@ -49,5 +49,7 @@ const gruposPrecioTaurus = computed(() => [
         <UiConsultaPrecio :titulo="t('precios.comun.titulo')" :subtitulo="t('precios.taurus.subtitulo')"
             :grupos="gruposPrecioTaurus" :nota="t('precios.comun.nota')" :texto-total="t('precios.comun.total')"
             :texto-boton="t('precios.comun.boton')" />
+
+        <UiFichaTecnicaComparativa producto-inicial="taurusV" />
     </main>
 </template>
