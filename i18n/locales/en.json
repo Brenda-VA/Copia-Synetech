@@ -220,5 +220,17 @@
       "fichaTecnica": "{producto} datasheet",
       "seleccionaPantalla": "Select your display"
     }
+  },
+  "piscisInfinityA1": {
+    "banner": {
+      "title": "This is PISCIS",
+      "subtitle": "The future of interactive displays",
+      "cta": "Request a demo",
+      "alt": {
+        "rotada": "Piscis Infinity A1 interactive display in perspective",
+        "aula": "Piscis Infinity A1 display in an interactive classroom",
+        "frontal": "Piscis Infinity A1 interactive display front view"
+      }
+    }
   }
 }
